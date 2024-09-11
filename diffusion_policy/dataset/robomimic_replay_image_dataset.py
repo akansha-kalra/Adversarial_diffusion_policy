@@ -46,6 +46,7 @@ class RobomimicReplayImageDataset(BaseImageDataset):
             seed=42,
             val_ratio=0.0
         ):
+        print(f"Checking dataset path inside RobomimicReplayImageDataset for robomimic BEFORE conversion {dataset_path}")
         rotation_transformer = RotationTransformer(
             from_rep='axis_angle', to_rep=rotation_rep)
 
@@ -248,6 +249,7 @@ def _convert_actions(raw_actions, abs_action, rotation_transformer):
 
 def _convert_robomimic_to_replay(store, shape_meta, dataset_path, abs_action, rotation_transformer, 
         n_workers=None, max_inflight_tasks=None):
+    print(f"Dataset path to convert robomimic to replay image datset{dataset_path}")
     if n_workers is None:
         n_workers = multiprocessing.cpu_count()
     if max_inflight_tasks is None:

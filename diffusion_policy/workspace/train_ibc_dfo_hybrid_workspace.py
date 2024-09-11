@@ -335,8 +335,8 @@ class TrainUnivPertIbcDfoHybridWorkspace(BaseWorkspace):
 
         if cfg.log:
             wandb.init(
-                project="offline_bc_evaluation",
-                name=f"ibc_dfo_{cfg.epsilon}_targeted_{cfg.targeted}_view_{cfg.view}"
+                project="Adv_diffusion_policy",
+                name=f"{cfg.exp_name}-ibc_dfo_{cfg.epsilon}_targeted_{cfg.targeted}_view_{cfg.view}"
             )
             wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": cfg.view})
 

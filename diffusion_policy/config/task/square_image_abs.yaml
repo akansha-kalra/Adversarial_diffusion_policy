@@ -1,5 +1,5 @@
 name: square_image
-
+image_shape: [3, 84, 84]
 shape_meta: &shape_meta
   # acceptable types: rgb, low_dim
   obs:
@@ -21,7 +21,7 @@ shape_meta: &shape_meta
 
 task_name: &task_name square
 dataset_type: &dataset_type ph
-dataset_path: &dataset_path data/robomimic/datasets/${task.task_name}/${task.dataset_type}/image_abs.hdf5
+dataset_path: &dataset_path /home/ak/Documents/diffusion_policy/data/robomimic/datasets/${task.task_name}/${task.dataset_type}/image_abs.hdf5
 abs_action: &abs_action True
 
 env_runner:
@@ -32,7 +32,7 @@ env_runner:
   n_train: 6
   n_train_vis: 2
   train_start_idx: 0
-  n_test: 50
+  n_test: 12
   n_test_vis: 4
   test_start_seed: 100000
   # use python's eval function as resolver, single-quoted string as argument
@@ -45,7 +45,7 @@ env_runner:
   past_action: ${past_action_visible}
   abs_action: *abs_action
   tqdm_interval_sec: 1.0
-  n_envs: 28
+  n_envs: 10
 # evaluation at this config requires a 16 core 64GB instance.
 
 dataset:

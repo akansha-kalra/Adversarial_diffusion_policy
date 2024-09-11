@@ -316,8 +316,8 @@ class TrainRobomimicUniPertImageWorkspace(BaseWorkspace):
 
         if cfg.log:
             wandb.init(
-                project="offline_bc_evaluation",
-                name=f"vanilla_bc_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}_feature_std"
+                project="Adv_diffusion_policy",
+                name=f"{cfg.exp_name}-vanilla_bc_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}_feature_std"
             )
             wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view})
         # set the model in eval mode
@@ -497,8 +497,8 @@ class TrainRobomimicUniPertImageWorkspaceRNN(BaseWorkspace):
 
         if cfg.log:
             wandb.init(
-                project="offline_bc_evaluation",
-                name=f"lstm_gmm_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
+                project="Adv_diffusion_policy",
+                name=f"{cfg.exp_name}-lstm_gmm_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
             )
             wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view})
         # set the model in eval mode
@@ -662,8 +662,8 @@ class TrainRobomimicUniPertImageWorkspaceIBC(BaseWorkspace):
 
         if cfg.log:
             wandb.init(
-                project="offline_bc_evaluation",
-                name=f"lstm_gmm_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
+                project="Adv_diffusion_policy",
+                name=f"{cfg.exp_name}-lstm_gmm_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
             )
             wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view})
         # set the model in eval mode

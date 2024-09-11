@@ -434,8 +434,9 @@ class RobomimicImageRunner(BaseImageRunner):
                     except IndexError:
                         im = observations[j][i][0].transpose(1, 2, 0)
                     ims.append([ax.imshow(im)])
-                save_path = Path(cfg.patch_path).parent
-                save_path = save_path.joinpath(f'vis_{i}.gif')
+                save_path = Path(cfg.checkpoint).parent
+
+                save_path = save_path.joinpath(f'{cfg.exp_name}_vis_{i}.gif')
                 print(f"Saving video to {save_path}")
 
                 if os.path.exists(save_path):

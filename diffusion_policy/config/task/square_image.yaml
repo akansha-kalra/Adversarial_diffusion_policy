@@ -1,5 +1,5 @@
 name: square_image
-
+image_shape: [3, 84, 84]
 shape_meta: &shape_meta
   # acceptable types: rgb, low_dim
   obs:
