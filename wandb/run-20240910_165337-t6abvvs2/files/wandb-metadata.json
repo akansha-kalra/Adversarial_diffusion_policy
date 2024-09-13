@@ -1,0 +1,27 @@
+{
+    "os": "Linux-6.8.0-40-generic-x86_64-with-glibc2.35",
+    "python": "3.9.18",
+    "heartbeatAt": "2024-09-10T22:53:38.527686",
+    "startedAt": "2024-09-10T22:53:37.922665",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--config-name=train_univ_pert_diffusion_unet_hybrid_workspace_Square_PH_Image.yaml",
+        "--config-dir=/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/config/"
+    ],
+    "state": "running",
+    "program": "/home/ak/Documents/Adversarial_diffusion_policy/train.py",
+    "codePath": "train.py",
+    "git": {
+        "remote": "https://github.com/akansha-kalra/Adversarial_diffusion_policy.git",
+        "commit": "54c0a130965aabaae0565f9c51346c0e5eac78ce"
+    },
+    "email": "noblevictornovel@gmail.com",
+    "root": "/home/ak/Documents/Adversarial_diffusion_policy",
+    "host": "ak-brownlab",
+    "username": "ak",
+    "executable": "/home/ak/anaconda3/envs/adv_robodiff/bin/python3"
+}

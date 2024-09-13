@@ -1,0 +1,505 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Training epoch 0:  96%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▎      | 421/440 [00:55<00:02,  8.66it/s]
+Loss for 0: 1.0197498336201534
+L2 norm of the agentview_image perturbation: 9.308061599731445
+L2 norm of the robot0_eye_in_hand_image perturbation: 9.308061599731445
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Eval NutAssemblySquareImage 1/1:   0%|                                                                                                                                                     | 0/400 [00:00<?, ?it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:   2%|██▊                                                                                                                                          | 8/400 [00:05<04:26,  1.47it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:   4%|█████▌                                                                                                                                      | 16/400 [00:10<04:18,  1.49it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:   6%|████████▍                                                                                                                                   | 24/400 [00:16<04:15,  1.47it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:   8%|███████████▏                                                                                                                                | 32/400 [00:21<04:09,  1.48it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  10%|██████████████                                                                                                                              | 40/400 [00:27<04:04,  1.47it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  12%|████████████████▊                                                                                                                           | 48/400 [00:32<04:01,  1.46it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  14%|███████████████████▌                                                                                                                        | 56/400 [00:38<04:05,  1.40it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  16%|██████████████████████▍                                                                                                                     | 64/400 [00:44<04:02,  1.39it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  18%|█████████████████████████▏                                                                                                                  | 72/400 [00:50<03:52,  1.41it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  20%|████████████████████████████                                                                                                                | 80/400 [00:56<03:48,  1.40it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  22%|██████████████████████████████▊                                                                                                             | 88/400 [01:01<03:40,  1.41it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  24%|█████████████████████████████████▌                                                                                                          | 96/400 [01:07<03:35,  1.41it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  26%|████████████████████████████████████▏                                                                                                      | 104/400 [01:12<03:29,  1.41it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  28%|██████████████████████████████████████▉                                                                                                    | 112/400 [01:18<03:23,  1.42it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  30%|█████████████████████████████████████████▋                                                                                                 | 120/400 [01:24<03:16,  1.43it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  32%|████████████████████████████████████████████▍                                                                                              | 128/400 [01:29<03:08,  1.44it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  34%|███████████████████████████████████████████████▎                                                                                           | 136/400 [01:34<03:02,  1.45it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  36%|██████████████████████████████████████████████████                                                                                         | 144/400 [01:40<02:58,  1.44it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  38%|████████████████████████████████████████████████████▊                                                                                      | 152/400 [01:46<02:52,  1.43it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  40%|███████████████████████████████████████████████████████▌                                                                                   | 160/400 [01:51<02:47,  1.43it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  42%|██████████████████████████████████████████████████████████▍                                                                                | 168/400 [01:57<02:42,  1.43it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  44%|█████████████████████████████████████████████████████████████▏                                                                             | 176/400 [02:02<02:35,  1.44it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  46%|███████████████████████████████████████████████████████████████▉                                                                           | 184/400 [02:08<02:32,  1.42it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  48%|██████████████████████████████████████████████████████████████████▋                                                                        | 192/400 [02:14<02:28,  1.40it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  50%|█████████████████████████████████████████████████████████████████████▌                                                                     | 200/400 [02:20<02:22,  1.40it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  52%|████████████████████████████████████████████████████████████████████████▎                                                                  | 208/400 [02:25<02:14,  1.42it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  54%|███████████████████████████████████████████████████████████████████████████                                                                | 216/400 [02:31<02:08,  1.43it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  56%|█████████████████████████████████████████████████████████████████████████████▊                                                             | 224/400 [02:36<02:01,  1.45it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  58%|████████████████████████████████████████████████████████████████████████████████▌                                                          | 232/400 [02:42<01:55,  1.45it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+
+Eval NutAssemblySquareImage 1/1:  60%|███████████████████████████████████████████████████████████████████████████████████▍                                                       | 240/400 [02:47<01:49,  1.46it/s]
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+This nobs shape:  torch.Size([56, 3, 84, 84])
+Key: agentview_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eye_in_hand_image and shape: torch.Size([28, 2, 3, 84, 84])
+Key: robot0_eef_pos and shape: torch.Size([28, 2, 3])
+Key: robot0_eef_quat and shape: torch.Size([28, 2, 4])
+Key: robot0_gripper_qpos and shape: torch.Size([28, 2, 2])
+Eval NutAssemblySquareImage 1/1:  60%|███████████████████████████████████████████████████████████████████████████████████▍                                                       | 240/400 [02:47<01:49,  1.46it/s]Traceback (most recent call last):
+  File "/home/ak/Documents/Adversarial_diffusion_policy/train.py", line 34, in <module>
+    main()
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 389, in _run_hydra
+    _run_app(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 452, in _run_app
+    run_and_report(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 213, in run_and_report
+    return func()
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 453, in <lambda>
+    lambda: hydra.run(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/hydra.py", line 119, in run
+    ret = run_job(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/ak/Documents/Adversarial_diffusion_policy/train.py", line 31, in main
+    workspace.run()
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/workspace/train_diffusion_unet_hybrid_workspace.py", line 441, in run
+    runner_log = env_runner.run(self.model, self.univ_pert, cfg)
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/env_runner/robomimic_image_runner.py", line 410, in run
+    obs, reward, done, info = env.step(env_action)
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/gym/vector/vector_env.py", line 94, in step
+    return self.step_wait()
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/gym_util/async_vector_env.py", line 290, in step_wait
+    results, successes = zip(*[pipe.recv() for pipe in self.parent_pipes])
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/gym_util/async_vector_env.py", line 290, in <listcomp>
+    results, successes = zip(*[pipe.recv() for pipe in self.parent_pipes])
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/multiprocessing/connection.py", line 250, in recv
+    buf = self._recv_bytes()
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/multiprocessing/connection.py", line 414, in _recv_bytes
+    buf = self._recv(4)
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/multiprocessing/connection.py", line 379, in _recv
+    chunk = read(handle, remaining)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/ak/Documents/Adversarial_diffusion_policy/train.py", line 34, in <module>
+    main()
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 389, in _run_hydra
+    _run_app(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 452, in _run_app
+    run_and_report(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 213, in run_and_report
+    return func()
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/utils.py", line 453, in <lambda>
+    lambda: hydra.run(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/_internal/hydra.py", line 119, in run
+    ret = run_job(
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/ak/Documents/Adversarial_diffusion_policy/train.py", line 31, in main
+    workspace.run()
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/workspace/train_diffusion_unet_hybrid_workspace.py", line 441, in run
+    runner_log = env_runner.run(self.model, self.univ_pert, cfg)
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/env_runner/robomimic_image_runner.py", line 410, in run
+    obs, reward, done, info = env.step(env_action)
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/site-packages/gym/vector/vector_env.py", line 94, in step
+    return self.step_wait()
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/gym_util/async_vector_env.py", line 290, in step_wait
+    results, successes = zip(*[pipe.recv() for pipe in self.parent_pipes])
+  File "/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/gym_util/async_vector_env.py", line 290, in <listcomp>
+    results, successes = zip(*[pipe.recv() for pipe in self.parent_pipes])
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/multiprocessing/connection.py", line 250, in recv
+    buf = self._recv_bytes()
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/multiprocessing/connection.py", line 414, in _recv_bytes
+    buf = self._recv(4)
+  File "/home/ak/anaconda3/envs/adv_robodiff/lib/python3.9/multiprocessing/connection.py", line 379, in _recv
+    chunk = read(handle, remaining)
+KeyboardInterrupt

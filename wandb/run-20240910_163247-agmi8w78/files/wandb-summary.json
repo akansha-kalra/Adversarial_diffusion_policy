@@ -1,0 +1,1 @@
+{"epsilon": 0.125, "epsilon_step": 0.05, "targeted": false, "view": "both", "_timestamp": 1726007630.105228, "_runtime": 62.93818497657776, "_step": 1, "loss": 1.0197498336201534, "epoch": 0, "_wandb": {"runtime": 233}}

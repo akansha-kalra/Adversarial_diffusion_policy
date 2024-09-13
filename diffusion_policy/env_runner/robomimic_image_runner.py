@@ -28,10 +28,12 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, ArtistAnimation
 from pathlib import Path
 import random
+
 # for deterministic results
 os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'  # or ':16:8'
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
+
 
 def create_env(env_meta, shape_meta, enable_render=True):
     modality_mapping = collections.defaultdict(list)
@@ -41,11 +43,12 @@ def create_env(env_meta, shape_meta, enable_render=True):
 
     env = EnvUtils.create_env_from_metadata(
         env_meta=env_meta,
-        render=False, 
+        render=False,
         render_offscreen=enable_render,
-        use_image_obs=enable_render, 
+        use_image_obs=enable_render,
     )
     return env
+
 
 def set_seed(seed):
     random.seed(seed)
@@ -55,32 +58,33 @@ def set_seed(seed):
         torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
 
+
 class RobomimicImageRunner(BaseImageRunner):
     """
     Robomimic envs already enforces number of steps.
     """
 
-    def __init__(self, 
-            output_dir,
-            dataset_path,
-            shape_meta:dict,
-            n_train=10,
-            n_train_vis=3,
-            train_start_idx=0,
-            n_test=22,
-            n_test_vis=6,
-            test_start_seed=10000,
-            max_steps=400,
-            n_obs_steps=2,
-            n_action_steps=8,
-            render_obs_key='agentview_image',
-            fps=10,
-            crf=22,
-            past_action=False,
-            abs_action=False,
-            tqdm_interval_sec=5.0,
-            n_envs=None
-        ):
+    def __init__(self,
+                 output_dir,
+                 dataset_path,
+                 shape_meta: dict,
+                 n_train=10,
+                 n_train_vis=3,
+                 train_start_idx=0,
+                 n_test=22,
+                 n_test_vis=6,
+                 test_start_seed=10000,
+                 max_steps=400,
+                 n_obs_steps=2,
+                 n_action_steps=8,
+                 render_obs_key='agentview_image',
+                 fps=10,
+                 crf=22,
+                 past_action=False,
+                 abs_action=False,
+                 tqdm_interval_sec=5.0,
+                 n_envs=None
+                 ):
         super().__init__(output_dir)
 
         if n_envs is None:
@@ -112,7 +116,7 @@ class RobomimicImageRunner(BaseImageRunner):
 
         def env_fn():
             robomimic_env = create_env(
-                env_meta=env_meta, 
+                env_meta=env_meta,
                 shape_meta=shape_meta
             )
             # Robosuite's hard reset causes excessive memory consumption.
@@ -142,17 +146,17 @@ class RobomimicImageRunner(BaseImageRunner):
                 n_action_steps=n_action_steps,
                 max_episode_steps=max_steps
             )
-        
+
         # For each process the OpenGL context can only be initialized once
         # Since AsyncVectorEnv uses fork to create worker process,
         # a separate env_fn that does not create OpenGL context (enable_render=False)
         # is needed to initialize spaces.
         def dummy_env_fn():
             robomimic_env = create_env(
-                    env_meta=env_meta, 
-                    shape_meta=shape_meta,
-                    enable_render=False
-                )
+                env_meta=env_meta,
+                shape_meta=shape_meta,
+                enable_render=False
+            )
             return MultiStepWrapper(
                 VideoRecordingWrapper(
                     RobomimicImageWrapper(
@@ -189,8 +193,8 @@ class RobomimicImageRunner(BaseImageRunner):
                 enable_render = i < n_train_vis
                 init_state = f[f'data/demo_{train_idx}/states'][0]
 
-                def init_fn(env, init_state=init_state, 
-                    enable_render=enable_render):
+                def init_fn(env, init_state=init_state,
+                            enable_render=enable_render):
                     # setup rendering
                     # video_wrapper
                     assert isinstance(env.env, VideoRecordingWrapper)
@@ -210,14 +214,14 @@ class RobomimicImageRunner(BaseImageRunner):
                 env_seeds.append(train_idx)
                 env_prefixs.append('train/')
                 env_init_fn_dills.append(dill.dumps(init_fn))
-        
+
         # test
         for i in range(n_test):
             seed = test_start_seed + i
             enable_render = i < n_test_vis
 
-            def init_fn(env, seed=seed, 
-                enable_render=enable_render):
+            def init_fn(env, seed=seed,
+                        enable_render=enable_render):
                 # setup rendering
                 # video_wrapper
                 assert isinstance(env.env, VideoRecordingWrapper)
@@ -242,7 +246,6 @@ class RobomimicImageRunner(BaseImageRunner):
         env = AsyncVectorEnv(env_fns, dummy_env_fn=dummy_env_fn)
         # env = SyncVectorEnv(env_fns)
 
-
         self.env_meta = env_meta
         self.env = env
         self.env_fns = env_fns
@@ -264,7 +267,7 @@ class RobomimicImageRunner(BaseImageRunner):
         dtype = policy.dtype
         env = self.env
         torch.use_deterministic_algorithms(True)
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -276,11 +279,11 @@ class RobomimicImageRunner(BaseImageRunner):
         observations = []
         # randomly select envs to visualize from the n_envs
         vis_envs = np.random.choice(n_envs, cfg.n_vis, replace=False)
-        try:
-            obs_encoder = policy.nets['policy'].nets['encoder'].nets['obs']
-        except:
-            obs_encoder = policy.obs_encoder
-        image_encoder = obs_encoder.obs_nets['robot0_eye_in_hand_image']
+        # try:
+        #     obs_encoder = policy.nets['policy'].nets['encoder'].nets['obs']
+        # except:
+        #     obs_encoder = policy.obs_encoder
+        # image_encoder = obs_encoder.obs_nets['robot0_eye_in_hand_image']
         policy.eval()
         # set_seed(1024)
 
@@ -289,17 +292,17 @@ class RobomimicImageRunner(BaseImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -307,8 +310,8 @@ class RobomimicImageRunner(BaseImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
             if cfg.view == 'both':
                 views = ['agentview_image', 'robot0_eye_in_hand_image']
             elif cfg.view == 'None':
@@ -322,12 +325,12 @@ class RobomimicImageRunner(BaseImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 # print(f"Min and Max of obs_dict: {torch.min(obs_dict['robot0_eye_in_hand_image'])}, {torch.max(obs_dict['robot0_eye_in_hand_image'])}")
                 clean_obs_dict = obs_dict.copy()
                 random_obs_dict = obs_dict.copy()
@@ -358,7 +361,7 @@ class RobomimicImageRunner(BaseImageRunner):
                 # device_transfer
                 try:
                     np_action_dict = dict_apply(action_dict,
-                        lambda x: x.detach().to('cpu').numpy())
+                                                lambda x: x.detach().to('cpu').numpy())
                     # np_clean_action_dict = dict_apply(clean_action_dict,
                     #     lambda x: x.detach().to('cpu').numpy())
                     # np_random_action_dict = dict_apply(random_action_dict,
@@ -373,10 +376,13 @@ class RobomimicImageRunner(BaseImageRunner):
                 #     print(f"l1_distance_{i}: {torch.norm(action_dict['action'][:,:,i] - clean_action_dict['action'][:,:,i], p=1) / action.shape[0]}")
                 if cfg.targeted and cfg.log:
                     try:
-                    # log the l1 distance between the predicted action and the target action per environment
-                        target_action = clean_action_dict['action'].to('cpu') + adversarial_patch['perturbations'].to('cpu')
+                        # log the l1 distance between the predicted action and the target action per environment
+                        target_action = clean_action_dict['action'].to('cpu') + adversarial_patch['perturbations'].to(
+                            'cpu')
                         for i in range(target_action.shape[-1]):
-                            wandb.log({f"l1_distance_{i}": torch.norm(action_dict['action'][:,:,i].to('cpu') - target_action[:,:,i], p=1) / target_action.shape[0]})
+                            wandb.log({f"l1_distance_{i}": torch.norm(
+                                action_dict['action'][:, :, i].to('cpu') - target_action[:, :, i], p=1) /
+                                                           target_action.shape[0]})
                     except KeyError:
                         pass
                 # features = np_action_dict['features']
@@ -396,12 +402,12 @@ class RobomimicImageRunner(BaseImageRunner):
                 # print(f"Diff: {diff}, Random Diff: {diff_random}")
                 # print(f"Diff Actions: {diff_actions}, Random Diff Actions: {diff_random_actions}")
                 # if cfg.log:
-                #     wandb.log({"Diff": diff, "Random Diff": diff_random, 
+                #     wandb.log({"Diff": diff, "Random Diff": diff_random,
                 #                 "Diff Actions": diff_actions, "Random Diff Actions": diff_random_actions})
                 if not np.all(np.isfinite(action)):
                     print(action)
                     raise RuntimeError("Nan or Inf action")
-                
+
                 # step env
                 env_action = action
                 if self.abs_action:
@@ -410,7 +416,7 @@ class RobomimicImageRunner(BaseImageRunner):
                 obs, reward, done, info = env.step(env_action)
                 done = np.all(done)
                 past_action = action
-                 # update pbar
+                # update pbar
                 pbar.update(action.shape[1])
             pbar.close()
 
@@ -434,9 +440,8 @@ class RobomimicImageRunner(BaseImageRunner):
                     except IndexError:
                         im = observations[j][i][0].transpose(1, 2, 0)
                     ims.append([ax.imshow(im)])
-                save_path = Path(cfg.checkpoint).parent
-
-                save_path = save_path.joinpath(f'{cfg.exp_name}_vis_{i}.gif')
+                save_path = Path(cfg.patch_path).parent
+                save_path = save_path.joinpath(f'vis_{i}.gif')
                 print(f"Saving video to {save_path}")
 
                 if os.path.exists(save_path):
@@ -445,9 +450,9 @@ class RobomimicImageRunner(BaseImageRunner):
                 ani = ArtistAnimation(fig, ims, interval=100, blit=True, repeat_delay=1000)
                 ani.save(str(save_path), writer='pillow')
                 plt.close(fig)
-        #         
+                #
                 wandb.log({f'vis_{i}': wandb.Image(str(save_path))})
-            
+
         # results reported in the paper are generated using the commented out line below
         # which will only report and average metrics from first n_envs initial condition and seeds
         # fortunately this won't invalidate our conclusion since
@@ -461,17 +466,17 @@ class RobomimicImageRunner(BaseImageRunner):
             prefix = self.env_prefixs[i]
             max_reward = np.max(all_rewards[i])
             max_rewards[prefix].append(max_reward)
-            log_data[prefix+f'sim_max_reward_{seed}'] = max_reward
+            log_data[prefix + f'sim_max_reward_{seed}'] = max_reward
 
         #     # visualize sim
         #     video_path = all_video_paths[i]
         #     if video_path is not None:
         #         sim_video = wandb.Video(video_path)
         #         log_data[prefix+f'sim_video_{seed}'] = sim_video
-        
+
         # log aggregate metrics
         for prefix, value in max_rewards.items():
-            name = prefix+'mean_score'
+            name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
 
@@ -481,12 +486,12 @@ class RobomimicImageRunner(BaseImageRunner):
         raw_shape = action.shape
         if raw_shape[-1] == 20:
             # dual arm
-            action = action.reshape(-1,2,10)
+            action = action.reshape(-1, 2, 10)
 
         d_rot = action.shape[-1] - 4
-        pos = action[...,:3]
-        rot = action[...,3:3+d_rot]
-        gripper = action[...,[-1]]
+        pos = action[..., :3]
+        rot = action[..., 3:3 + d_rot]
+        gripper = action[..., [-1]]
         rot = self.rotation_transformer.inverse(rot)
         uaction = np.concatenate([
             pos, rot, gripper
@@ -498,12 +503,13 @@ class RobomimicImageRunner(BaseImageRunner):
 
         return uaction
 
+
 class AdversarialRobomimicImageRunner(RobomimicImageRunner):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def apply_fgsm_attack(self, obs_dict, policy:BaseImagePolicy,\
-                    cfg, action):
+    def apply_fgsm_attack(self, obs_dict, policy: BaseImagePolicy, \
+                          cfg, action):
         view = cfg.view
         clip_min = cfg.clip_min
         clip_max = cfg.clip_max
@@ -521,7 +527,7 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
         for view in views:
             assert torch.all(obs_dict[view] >= clip_min) and torch.all(obs_dict[view] <= clip_max), \
                 "Input tensor is not within the clip range"
-        
+
         # create a copy of the original obs_dict that requires grad for backward pass
         obs_dict = dict_apply(obs_dict, lambda x: x.clone().detach().requires_grad_(True))
         policy.zero_grad()
@@ -537,15 +543,15 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
             loss = mse_loss(predicted_action, action)
             loss = -loss
         else:
-            # loss = mse_loss(predicted_action, action)
+            loss = mse_loss(predicted_action, action)
             # apply loss for the first two dimensions of the action
-            loss = mse_loss(predicted_action[:,:, :2], action[:,:, :2])
+            # loss = mse_loss(predicted_action[:,:, :2], action[:,:, :2])
         loss.backward()
         if cfg.log:
             wandb.log({"Loss": loss.item()})
             # log per dimension mse loss for predicted_action and action
             for i in range(7):
-                wandb.log({f"Loss{i}d": mse_loss(predicted_action[:,:, i], action[:,:, i])})
+                wandb.log({f"Loss{i}d": mse_loss(predicted_action[:, :, i], action[:, :, i])})
         for view in views:
             # assert obs_dict_copy[view].grad_fn is not None, "Input tensor does not have a grad_fn"
             grad = torch.sign(obs_dict[view].grad)
@@ -554,7 +560,7 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
         # obs_dict['agentview_image'].requires_grad = False
         return obs_dict
 
-    def apply_pgd_attack(self, obs_dict, policy:BaseImagePolicy, cfg, action):
+    def apply_pgd_attack(self, obs_dict, policy: BaseImagePolicy, cfg, action):
         """
         Apply projected gradient descent attack from Madry et al. (2017)
         """
@@ -580,7 +586,8 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
         if rand_int:
             # randomly initialize the perturbation from a uniform distribution within the epsilon bound
             for view in views:
-                perturbation = torch.FloatTensor(obs_dict[view].shape).uniform_(-self.epsilon, self.epsilon).to(policy.device)
+                perturbation = torch.FloatTensor(obs_dict[view].shape).uniform_(-self.epsilon, self.epsilon).to(
+                    policy.device)
                 perturbation = torch.clamp(perturbation, -eps_iter, eps_iter)
                 perturbation = torch.clamp(obs_dict[view] + perturbation, clip_min, clip_max) - obs_dict[view]
                 adv_obs_dict[view] = obs_dict[view] + perturbation
@@ -604,7 +611,7 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
         dtype = policy.dtype
         env = self.env
         attack_type = cfg.attack_type
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -626,17 +633,17 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -644,9 +651,9 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
-            
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
+
             done = False
             while not done:
                 # create obs dict
@@ -654,12 +661,12 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 # device transfer and enable gradients
                 # obs_dict = dict_apply(np_obs_dict,
                 #    lambda x: torch.from_numpy(x).to(device=device).requires_grad_(True))
@@ -669,7 +676,7 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
                     action = policy.predict_action(obs_dict)['action']
                 if attack_type == 'fgsm':
                     obs_dict = self.apply_fgsm_attack(obs_dict, policy, \
-                                            cfg, action)
+                                                      cfg, action)
                     for view in views:
                         perturbation = abs(obs_dict[view] - prev_obs_dict[view])
                         perturbation = perturbation.view(perturbation.shape[0], -1)
@@ -689,13 +696,13 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
 
                 # device_transfer
                 np_action_dict = dict_apply(action_dict,
-                    lambda x: x.detach().to('cpu').numpy())
+                                            lambda x: x.detach().to('cpu').numpy())
 
                 action = np_action_dict['action']
                 if not np.all(np.isfinite(action)):
                     print(action)
                     raise RuntimeError("Nan or Inf action")
-                
+
                 # step env
                 env_action = action
                 if self.abs_action:
@@ -705,11 +712,11 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
                 done = np.all(done)
                 past_action = action
                 # if cfg.log == True:
-                    # log the perturbation for each environment separately
-                    # for i in range(len(perturbation_norm)):
-                    #     wandb.log({f'perturbation_{view}_{i}': perturbation_norm[i]})
-                    # for i in range(len(perturbation_max)):
-                    #     wandb.log({f'max_perturbation_{view}_{i}': perturbation_max[i]})
+                # log the perturbation for each environment separately
+                # for i in range(len(perturbation_norm)):
+                #     wandb.log({f'perturbation_{view}_{i}': perturbation_norm[i]})
+                # for i in range(len(perturbation_max)):
+                #     wandb.log({f'max_perturbation_{view}_{i}': perturbation_max[i]})
                 # update pbar
                 pbar.update(action.shape[1])
             pbar.close()
@@ -719,7 +726,7 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
             all_rewards[this_global_slice] = env.call('get_attr', 'reward')[this_local_slice]
         # clear out video buffer
         _ = env.reset()
-        
+
         # log
         max_rewards = collections.defaultdict(list)
         log_data = dict()
@@ -736,28 +743,29 @@ class AdversarialRobomimicImageRunner(RobomimicImageRunner):
             prefix = self.env_prefixs[i]
             max_reward = np.max(all_rewards[i])
             max_rewards[prefix].append(max_reward)
-            log_data[prefix+f'sim_max_reward_{seed}'] = max_reward
+            log_data[prefix + f'sim_max_reward_{seed}'] = max_reward
 
             # visualize sim
             video_path = all_video_paths[i]
             if video_path is not None:
                 sim_video = wandb.Video(video_path)
-                log_data[prefix+f'sim_video_{seed}'] = sim_video
-        
+                log_data[prefix + f'sim_video_{seed}'] = sim_video
+
         # log aggregate metrics
         for prefix, value in max_rewards.items():
-            name = prefix+'mean_score'
+            name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
 
         return log_data
 
+
 class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def apply_fgsm_attack(self, obs_dict, policy:BaseImagePolicy,\
-                    cfg, target_means=None):
+    def apply_fgsm_attack(self, obs_dict, policy: BaseImagePolicy, \
+                          cfg, target_means=None):
         view = cfg.view
         clip_min = cfg.clip_min
         clip_max = cfg.clip_max
@@ -775,7 +783,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
         for view in views:
             assert torch.all(obs_dict[view] >= clip_min) and torch.all(obs_dict[view] <= clip_max), \
                 "Input tensor is not within the clip range"
-        
+
         # create a copy of the original obs_dict that requires grad for backward pass
         obs_dict = dict_apply(obs_dict, lambda x: x.clone().detach().requires_grad_(True))
         policy.zero_grad()
@@ -788,7 +796,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
             means = action_dist.component_distribution.base_dist.loc
 
         # predicted_action = policy.predict_action(obs_dict)['action']
-        predicted_action_dist= policy.action_dist(obs_dict)
+        predicted_action_dist = policy.action_dist(obs_dict)
         # print("ACtion dist: ", action_dist)
         predicted_means = predicted_action_dist.component_distribution.base_dist.loc
         # predicted_scales = predicted_action_dist.component_distribution.base_dist.scale
@@ -815,7 +823,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
         # obs_dict['agentview_image'].requires_grad = False
         return obs_dict
 
-    def apply_pgd_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_pgd_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         """
         Apply projected gradient descent attack from Madry et al. (2017)
         """
@@ -841,7 +849,8 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
         if rand_int:
             # randomly initialize the perturbation from a uniform distribution within the epsilon bound
             for view in views:
-                perturbation = torch.FloatTensor(obs_dict[view].shape).uniform_(-self.epsilon, self.epsilon).to(policy.device)
+                perturbation = torch.FloatTensor(obs_dict[view].shape).uniform_(-self.epsilon, self.epsilon).to(
+                    policy.device)
                 perturbation = torch.clamp(perturbation, -eps_iter, eps_iter)
                 perturbation = torch.clamp(obs_dict[view] + perturbation, clip_min, clip_max) - obs_dict[view]
                 adv_obs_dict[view] = obs_dict[view] + perturbation
@@ -849,7 +858,8 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
             clean_action_dist = policy.action_dist(obs_dict)
             clean_action_means = clean_action_dist.component_distribution.base_dist.loc
             if cfg.targeted:
-                target_means = clean_action_means.clone().detach() + torch.tensor(cfg.perturbations).unsqueeze(0).to(policy.device)
+                target_means = clean_action_means.clone().detach() + torch.tensor(cfg.perturbations).unsqueeze(0).to(
+                    policy.device)
             else:
                 target_means = clean_action_means
         adv_obs_dict = obs_dict.copy()
@@ -866,7 +876,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
                 adv_obs_dict[view] = torch.clamp(adv_obs_dict[view], clip_min, clip_max)
         return adv_obs_dict
 
-    def apply_noise_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_noise_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         """
         Applies noise attack to the input image.
         A basic type of attack to serve as a baseline.
@@ -884,11 +894,11 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
         else:
             raise ValueError("view must be a string or a list of strings")
         for view in views:
-            noise = torch.FloatTensor(obs_dict[view].shape).uniform_(-noise_bound, noise_bound).to(obs_dict[view].device)
+            noise = torch.FloatTensor(obs_dict[view].shape).uniform_(-noise_bound, noise_bound).to(
+                obs_dict[view].device)
             obs_dict[view] = obs_dict[view] + noise
             obs_dict[view] = torch.clamp(obs_dict[view], clip_min, clip_max)
         return obs_dict
-
 
     def run(self, policy: BaseImagePolicy, epsilon: float, cfg):
         self.epsilon = epsilon
@@ -896,7 +906,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
         dtype = policy.dtype
         env = self.env
         attack_type = cfg.attack_type
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -918,17 +928,17 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -936,9 +946,9 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
-            
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
+
             done = False
             while not done:
                 # create obs dict
@@ -946,12 +956,12 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 # device transfer and enable gradients
                 # obs_dict = dict_apply(np_obs_dict,
                 #    lambda x: torch.from_numpy(x).to(device=device).requires_grad_(True))
@@ -964,7 +974,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
                 # apply attack
                 if attack_type == 'fgsm':
                     obs_dict = self.apply_fgsm_attack(obs_dict, policy, \
-                                            cfg, target_means)
+                                                      cfg, target_means)
                     for view in views:
                         perturbation = abs(obs_dict[view] - prev_obs_dict[view])
                         perturbation = perturbation.view(perturbation.shape[0], -1)
@@ -984,13 +994,13 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
 
                 # device_transfer
                 np_action_dict = dict_apply(action_dict,
-                    lambda x: x.detach().to('cpu').numpy())
+                                            lambda x: x.detach().to('cpu').numpy())
 
                 action = np_action_dict['action']
                 if not np.all(np.isfinite(action)):
                     print(action)
                     raise RuntimeError("Nan or Inf action")
-                
+
                 # step env
                 env_action = action
                 if self.abs_action:
@@ -1000,11 +1010,11 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
                 done = np.all(done)
                 past_action = action
                 # if cfg.log == True:
-                    # log the perturbation for each environment separately
-                    # for i in range(len(perturbation_norm)):
-                    #     wandb.log({f'perturbation_{view}_{i}': perturbation_norm[i]})
-                    # for i in range(len(perturbation_max)):
-                    #     wandb.log({f'max_perturbation_{view}_{i}': perturbation_max[i]})
+                # log the perturbation for each environment separately
+                # for i in range(len(perturbation_norm)):
+                #     wandb.log({f'perturbation_{view}_{i}': perturbation_norm[i]})
+                # for i in range(len(perturbation_max)):
+                #     wandb.log({f'max_perturbation_{view}_{i}': perturbation_max[i]})
                 # update pbar
                 pbar.update(action.shape[1])
             pbar.close()
@@ -1014,7 +1024,7 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
             all_rewards[this_global_slice] = env.call('get_attr', 'reward')[this_local_slice]
         # clear out video buffer
         _ = env.reset()
-        
+
         # log
         max_rewards = collections.defaultdict(list)
         log_data = dict()
@@ -1031,17 +1041,17 @@ class AdversarialRobomimicImageRunnerLSTM(RobomimicImageRunner):
             prefix = self.env_prefixs[i]
             max_reward = np.max(all_rewards[i])
             max_rewards[prefix].append(max_reward)
-            log_data[prefix+f'sim_max_reward_{seed}'] = max_reward
+            log_data[prefix + f'sim_max_reward_{seed}'] = max_reward
 
             # visualize sim
             video_path = all_video_paths[i]
             if video_path is not None:
                 sim_video = wandb.Video(video_path)
-                log_data[prefix+f'sim_video_{seed}'] = sim_video
-        
+                log_data[prefix + f'sim_video_{seed}'] = sim_video
+
         # log aggregate metrics
         for prefix, value in max_rewards.items():
-            name = prefix+'mean_score'
+            name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
 
@@ -1057,12 +1067,12 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         self.loss_per_episode = []
         self.perturbation_per_episode = []
 
-    def apply_fgsm_attack_loss_of_ibc(self, obs_dict_cp, policy:BaseImagePolicy, cfg, actions = None, \
-                                        action_samples=None, clean_actions=None):
+    def apply_fgsm_attack_loss_of_ibc(self, obs_dict_cp, policy: BaseImagePolicy, cfg, actions=None, \
+                                      action_samples=None, clean_actions=None):
         # use the same loss as the policy
         view = cfg.view
         if view == 'both':
-            views = ['agentview_image', 'robot0_eye_in_hand_image']                
+            views = ['agentview_image', 'robot0_eye_in_hand_image']
         elif isinstance(view, list):
             views = view
         elif isinstance(view, str):
@@ -1072,7 +1082,7 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
 
         # create a copy of the original obs_dict that requires grad for backward pass
         obs_dict_copy = dict_apply(obs_dict_cp, lambda x: x.clone().detach().requires_grad_(True))
-         # retain the grad on the non-leaf tensor, i.e. the input tensor
+        # retain the grad on the non-leaf tensor, i.e. the input tensor
         # for view in views:
         #     obs_dict_copy[view].retain_grad()
         policy.zero_grad()
@@ -1084,7 +1094,8 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         # batch['action'] = actions
         if cfg.targeted:
             if action_samples is not None:
-                loss, obs_dict_copy, obs_features = policy.compute_loss_with_grad(obs_dict_copy, actions, action_samples)
+                loss, obs_dict_copy, obs_features = policy.compute_loss_with_grad(obs_dict_copy, actions,
+                                                                                  action_samples)
             else:
                 loss, obs_dict_copy, obs_features = policy.compute_loss_with_grad(obs_dict_copy, actions)
         else:
@@ -1100,7 +1111,7 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         #     print("Obs dict copy is leaf? ", obs_dict_copy[view].is_leaf)
         # print("Loss: ", loss)
         if cfg.rand_target or cfg.targeted:
-             loss = -loss
+            loss = -loss
         if cfg.log:
             wandb.log({"FGSM_Loss": loss.item()})
         loss.backward()
@@ -1139,7 +1150,7 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
 
             if cfg.attack_type == 'pgd':
                 obs_dict_copy[view] = obs_dict_copy[view] + optimize_linear(grad, cfg.eps_iter, cfg.norm)
-            elif cfg.attack_type == 'fgsm' :
+            elif cfg.attack_type == 'fgsm':
                 obs_dict_copy[view] = obs_dict_copy[view] + optimize_linear(grad, self.epsilon, cfg.norm)
             else:
                 raise ValueError("Only PGD and FGSM attacks are supported")
@@ -1152,7 +1163,7 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                     )
                 obs_dict_copy[view] = torch.clamp(obs_dict_copy[view], cfg.clip_min, cfg.clip_max)
                 # if torch.any(old_obs_dict != obs_dict_copy[view]):
-                    # print("Clipping applied")
+                # print("Clipping applied")
             # diff = abs(obs_dict_copy[view] - prev_obs_dict[view])
             # diff = diff.view(diff.shape[0], -1)
             # grad = grad.view(grad.shape[0], -1)
@@ -1164,11 +1175,10 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
             #    wandb.log({"Sum_Perturbation": diff_sum})
         return obs_dict_copy
 
-
-    def apply_fgsm_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_fgsm_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         view = cfg.view
         if view == 'both':
-            views = ['agentview_image', 'robot0_eye_in_hand_image']                
+            views = ['agentview_image', 'robot0_eye_in_hand_image']
         elif isinstance(view, list):
             views = view
         elif isinstance(view, str):
@@ -1187,9 +1197,9 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
             # print("action_dist: ", action_dist.grad_fn)
             # print("The shape of action dist: ", action_dist.shape)
             # means = action_dist.component_distribution.base_dist.loc
-        
+
         # predicted_action = policy.predict_action(obs_dict)['action']
-        predicted_action_dist= policy.action_dist(obs_dict)
+        predicted_action_dist = policy.action_dist(obs_dict)
         # print("predicted_action_dist: ", predicted_action_dist)
         # print("ACtion dist: ", action_dist)
         # predicted_means = predicted_action_dist.component_distribution.base_dist.loc
@@ -1213,8 +1223,8 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         torch.cuda.empty_cache()
         return obs_dict
 
-    def apply_pgd_attack(self, obs_dict, policy:BaseImagePolicy, 
-                            cfg, clean_actions = None):
+    def apply_pgd_attack(self, obs_dict, policy: BaseImagePolicy,
+                         cfg, clean_actions=None):
         """
         Apply projected gradient descent attack from Madry et al. (2017)
         """
@@ -1257,7 +1267,8 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         #         obs_dict[view] = obs_dict[view] + perturbation
         if cfg.rand_target:
             target_actions = torch.FloatTensor(obs_dict['agentview_image'].shape[0], \
-                        self.n_action_steps, cfg.action_space[0]).uniform_(0, 1).to(obs_dict['agentview_image'].device)
+                                               self.n_action_steps, cfg.action_space[0]).uniform_(0, 1).to(
+                obs_dict['agentview_image'].device)
         else:
             target_actions = policy.predict_action(obs_dict)['action']
             if clean_actions is None:
@@ -1274,11 +1285,12 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         # replace one of the action with the clean action
         if cfg.targeted:
             action_samples[:, 1] = clean_actions
-        target_actions = torch.cat([torch.zeros_like(target_actions[:,0:1]), target_actions], dim=1)
+        target_actions = torch.cat([torch.zeros_like(target_actions[:, 0:1]), target_actions], dim=1)
         # print("First obs dict: ", adv_obs_dict['agentview_image'])
         for i in range(num_iter):
             policy.zero_grad()
-            adv_obs_dict = self.apply_fgsm_attack_loss_of_ibc(adv_obs_dict, policy, cfg, target_actions, action_samples, clean_actions)
+            adv_obs_dict = self.apply_fgsm_attack_loss_of_ibc(adv_obs_dict, policy, cfg, target_actions, action_samples,
+                                                              clean_actions)
             for view in views:
                 perturbation = adv_obs_dict[view] - obs_dict[view]
                 if norm == 'l2':
@@ -1290,14 +1302,14 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                 if cfg.log:
                     wandb.log({f"L2_norm_{view}": torch.norm(perturbation, p=2)})
                 # if view == 'agentview_image':
-                    # perturbation_wrt_original = torch.sum(abs(adv_obs_dict[view].view(adv_obs_dict[view].shape[0], -1).float() - obs_dict[view].view(obs_dict[view].shape[0], -1).float()), dim=1)
-                    # print("Perturbation wrt original: ", perturbation_wrt_original)
-                    # self.pertubation_per_iteration.append(perturbation_wrt_original)
+                # perturbation_wrt_original = torch.sum(abs(adv_obs_dict[view].view(adv_obs_dict[view].shape[0], -1).float() - obs_dict[view].view(obs_dict[view].shape[0], -1).float()), dim=1)
+                # print("Perturbation wrt original: ", perturbation_wrt_original)
+                # self.pertubation_per_iteration.append(perturbation_wrt_original)
             # print mean perturbation
             # print("Mean perturbation: ", torch.mean(perturbation))
         return adv_obs_dict
 
-    def apply_noise_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_noise_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         """
         Applies noise attack to the input image.
         A basic type of attack to serve as a baseline.
@@ -1315,18 +1327,18 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
         else:
             raise ValueError("view must be a string or a list of strings")
         for view in views:
-            noise = torch.FloatTensor(obs_dict[view].shape).uniform_(-noise_bound, noise_bound).to(obs_dict[view].device)
+            noise = torch.FloatTensor(obs_dict[view].shape).uniform_(-noise_bound, noise_bound).to(
+                obs_dict[view].device)
             obs_dict[view] = obs_dict[view] + noise
             obs_dict[view] = torch.clamp(obs_dict[view], clip_min, clip_max)
         return obs_dict
-
 
     def run(self, policy: BaseImagePolicy, epsilon: float, cfg):
         self.epsilon = epsilon
         device = policy.device
         dtype = policy.dtype
         env = self.env
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -1347,17 +1359,17 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -1365,9 +1377,9 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
-            
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
+
             done = False
             average_perturbation = 0
             perturbed_obs_dicts = []
@@ -1380,24 +1392,25 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 clean_obs_dict = obs_dict.copy()
                 print(type(obs_dict), obs_dict['agentview_image'].shape)
 
                 # clean_obs_dicts.append(obs_dict)
                 if cfg.rand_target:
                     target_actions = torch.FloatTensor(obs_dict['agentview_image'].shape[0], \
-                                self.n_action_steps, cfg.action_space[0]).uniform_(0, 1).to(obs_dict['agentview_image'].device)
+                                                       self.n_action_steps, cfg.action_space[0]).uniform_(0, 1).to(
+                        obs_dict['agentview_image'].device)
                 else:
                     target_actions = policy.predict_action(np_obs_dict)['action']
                 # add a dummy action at the beginning to get the shape right while
                 # computing loss but it won't be used in the loss computation
-                target_actions = torch.cat([torch.zeros_like(target_actions[:,0:1]), target_actions], dim=1)
+                target_actions = torch.cat([torch.zeros_like(target_actions[:, 0:1]), target_actions], dim=1)
                 # print("Target actions: ", target_actions)
 
                 # device transfer and enable gradients
@@ -1454,34 +1467,33 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
 
                 # average_perturbation += perturbation_max
                 # if cfg.log == True:
-                    # log the perturbation for each environment separately
-                    # for i in range(len(perturbation_norm)):
-                    #     wandb.log({f'perturbation_{view}_{i}': perturbation_norm[i]})
-                    # get the energy of the clean and perturbed images
-                    # energy_clean = policy.predict_action(prev_obs_dict, return_energy=True)
-                    # energy_perturbed = policy.predict_action(obs_dict, return_energy=True)
-                    # print("Energy clean: ", energy_clean['energy'])
-                    # print("Shape, Max, min and median of clean energy: ", energy_clean['energy'].shape, torch.max(energy_clean['energy']), torch.min(energy_clean['energy']), torch.median(energy_clean['energy']))
-                    # print("Energy perturbed: ", energy_perturbed['energy'])
-                    # print("Shape, Max, min and median of perturbed energy: ", energy_clean['energy'].shape, torch.max(energy_perturbed['energy']), torch.min(energy_perturbed['energy']), torch.median(energy_perturbed['energy']))
-                    # save the max, min, median, mean and std, and number of actions within max-5 
-                    # for i in range(len(energy_clean['energy'])):
-                    #     wandb.log({f'Energy_clean_max_{i}': torch.max(energy_clean['energy'][i]), \
-                    #                 f'Energy_clean_min_{i}': torch.min(energy_clean['energy'][i]), \
-                    #                 f'Energy_clean_median_{i}': torch.median(energy_clean['energy'][i]), \
-                    #                 f'Energy_clean_mean_{i}': torch.mean(energy_clean['energy'][i]), \
-                    #                 f'Energy_clean_std_{i}': torch.std(energy_clean['energy'][i]), \
-                    #                 f'Energy_clean_max-5_{i}': torch.sum(energy_clean['energy'][i] > torch.max(energy_clean['energy'][i]) - 5), \
-                    #                 f'Energy_perturbed_max_{i}': torch.max(energy_perturbed['energy'][i]), \
-                    #                 f'Energy_perturbed_min_{i}': torch.min(energy_perturbed['energy'][i]), \
-                    #                 f'Energy_perturbed_median_{i}': torch.median(energy_perturbed['energy'][i]), \
-                    #                 f'Energy_perturbed_mean_{i}': torch.mean(energy_perturbed['energy'][i]), \
-                    #                 f'Energy_perturbed_std_{i}': torch.std(energy_perturbed['energy'][i]), \
-                    #                 f'Energy_perturbed_max-5_{i}': torch.sum(energy_perturbed['energy'][i] > torch.max(energy_perturbed['energy'][i]) - 5)})
-                    # for i in range(len(perturbation_max)):
-                    #     wandb.log({f'max_perturbation_{view}_{i}': perturbation_max[i], \
-                    #                 f'sum_perturbation_{view}_{i}': perturbation_sum[i]})
-
+                # log the perturbation for each environment separately
+                # for i in range(len(perturbation_norm)):
+                #     wandb.log({f'perturbation_{view}_{i}': perturbation_norm[i]})
+                # get the energy of the clean and perturbed images
+                # energy_clean = policy.predict_action(prev_obs_dict, return_energy=True)
+                # energy_perturbed = policy.predict_action(obs_dict, return_energy=True)
+                # print("Energy clean: ", energy_clean['energy'])
+                # print("Shape, Max, min and median of clean energy: ", energy_clean['energy'].shape, torch.max(energy_clean['energy']), torch.min(energy_clean['energy']), torch.median(energy_clean['energy']))
+                # print("Energy perturbed: ", energy_perturbed['energy'])
+                # print("Shape, Max, min and median of perturbed energy: ", energy_clean['energy'].shape, torch.max(energy_perturbed['energy']), torch.min(energy_perturbed['energy']), torch.median(energy_perturbed['energy']))
+                # save the max, min, median, mean and std, and number of actions within max-5
+                # for i in range(len(energy_clean['energy'])):
+                #     wandb.log({f'Energy_clean_max_{i}': torch.max(energy_clean['energy'][i]), \
+                #                 f'Energy_clean_min_{i}': torch.min(energy_clean['energy'][i]), \
+                #                 f'Energy_clean_median_{i}': torch.median(energy_clean['energy'][i]), \
+                #                 f'Energy_clean_mean_{i}': torch.mean(energy_clean['energy'][i]), \
+                #                 f'Energy_clean_std_{i}': torch.std(energy_clean['energy'][i]), \
+                #                 f'Energy_clean_max-5_{i}': torch.sum(energy_clean['energy'][i] > torch.max(energy_clean['energy'][i]) - 5), \
+                #                 f'Energy_perturbed_max_{i}': torch.max(energy_perturbed['energy'][i]), \
+                #                 f'Energy_perturbed_min_{i}': torch.min(energy_perturbed['energy'][i]), \
+                #                 f'Energy_perturbed_median_{i}': torch.median(energy_perturbed['energy'][i]), \
+                #                 f'Energy_perturbed_mean_{i}': torch.mean(energy_perturbed['energy'][i]), \
+                #                 f'Energy_perturbed_std_{i}': torch.std(energy_perturbed['energy'][i]), \
+                #                 f'Energy_perturbed_max-5_{i}': torch.sum(energy_perturbed['energy'][i] > torch.max(energy_perturbed['energy'][i]) - 5)})
+                # for i in range(len(perturbation_max)):
+                #     wandb.log({f'max_perturbation_{view}_{i}': perturbation_max[i], \
+                #                 f'sum_perturbation_{view}_{i}': perturbation_sum[i]})
 
                 # run policy
                 # random_noise_dict = clean_obs_dict.copy()
@@ -1490,8 +1502,11 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                 #     random_noise_dict[view] = random_noise_dict[view] + random_noise
                 #     random_noise_dict[view] = torch.clamp(random_noise_dict[view], 0, 1)
                 energy_save_path = f"/teamspace/studios/this_studio/bc_attacks/diffusion_policy/plots/pkl_files/"
-                pickle.dump(obs_dict, open(f"{energy_save_path}ibc_perturbed_obs_dict_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
-                pickle.dump(clean_obs_dict, open(f"{energy_save_path}ibc_clean_obs_dict_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
+                pickle.dump(obs_dict,
+                            open(f"{energy_save_path}ibc_perturbed_obs_dict_{self.epsilon}_timestep_{timestep}.pkl",
+                                 "wb"))
+                pickle.dump(clean_obs_dict,
+                            open(f"{energy_save_path}ibc_clean_obs_dict_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
                 with torch.no_grad():
                     action_dict = policy.predict_action(obs_dict, return_energy=True)
                     clean_dict = policy.predict_action(clean_obs_dict, return_energy=True)
@@ -1502,14 +1517,17 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                     # print(f"Perturbed energy {torch.max(action_dict['energy'])}")
                     # print(f"Random energy {torch.max(random_dict['energy'])}")
                 # perturbed_obs_dicts.append(obs_dict)
-                pickle.dump(clean_energy, open(f"{energy_save_path}ibc_clean_energy_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
-                pickle.dump(perturbed_energy, open(f"{energy_save_path}ibc_perturbed_energy_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
+                pickle.dump(clean_energy,
+                            open(f"{energy_save_path}ibc_clean_energy_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
+                pickle.dump(perturbed_energy,
+                            open(f"{energy_save_path}ibc_perturbed_energy_{self.epsilon}_timestep_{timestep}.pkl",
+                                 "wb"))
 
                 # device_transfer
                 np_action_dict = dict_apply(action_dict,
-                    lambda x: x.detach().to('cpu').numpy())
+                                            lambda x: x.detach().to('cpu').numpy())
                 clean_action_dict = dict_apply(clean_dict,
-                    lambda x: x.detach().to('cpu').numpy())
+                                               lambda x: x.detach().to('cpu').numpy())
                 # random_dict = dict_apply(random_dict,
                 #     lambda x: x.detach().to('cpu').numpy())
                 action = np_action_dict['action']
@@ -1520,11 +1538,11 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                 # print('difference random: ', action - random_dict['action'])
                 if cfg.log:
                     wandb.log({'L2_norm_actions': torch.norm(torch.tensor(action) - torch.tensor(clean_action), p=2)})
-                
+
                 if not np.all(np.isfinite(action)):
                     print(action)
                     raise RuntimeError("Nan or Inf action")
-                
+
                 # step env
                 env_action = action
                 if self.abs_action:
@@ -1538,12 +1556,12 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                 # update pbar
                 pbar.update(action.shape[1])
             pbar.close()
-            #if cfg.log == True:
-                # log the average perturbation for the whole step for 
-                # each environment
-                # average_perturbation = average_perturbation / self.max_steps
-                # for i in range(len(average_perturbation)):
-                #    wandb.log({f'average_perturbation_{view}_{i}': average_perturbation[i]})
+            # if cfg.log == True:
+            # log the average perturbation for the whole step for
+            # each environment
+            # average_perturbation = average_perturbation / self.max_steps
+            # for i in range(len(average_perturbation)):
+            #    wandb.log({f'average_perturbation_{view}_{i}': average_perturbation[i]})
             # collect data for this round
             all_video_paths[this_global_slice] = env.render()[this_local_slice]
             all_rewards[this_global_slice] = env.call('get_attr', 'reward')[this_local_slice]
@@ -1573,17 +1591,17 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
             prefix = self.env_prefixs[i]
             max_reward = np.max(all_rewards[i])
             max_rewards[prefix].append(max_reward)
-            log_data[prefix+f'sim_max_reward_{seed}'] = max_reward
+            log_data[prefix + f'sim_max_reward_{seed}'] = max_reward
 
             # visualize sim
             video_path = all_video_paths[i]
             if video_path is not None:
                 sim_video = wandb.Video(video_path)
-                log_data[prefix+f'sim_video_{seed}'] = sim_video
-        
+                log_data[prefix + f'sim_video_{seed}'] = sim_video
+
         # log aggregate metrics
         for prefix, value in max_rewards.items():
-            name = prefix+'mean_score'
+            name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
 
@@ -1597,13 +1615,13 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
         The runner class for the adversarial attacks on the BET Policy
         """
 
-    def apply_fgsm_attack(self, obs_dict, policy:BaseImagePolicy, cfg, target_action=None):
+    def apply_fgsm_attack(self, obs_dict, policy: BaseImagePolicy, cfg, target_action=None):
         """
-        Applys the FGSM attack to the input image 
+        Applys the FGSM attack to the input image
         """
         view = cfg.view
         if view == 'both':
-            views = ['agentview_image', 'robot0_eye_in_hand_image']                
+            views = ['agentview_image', 'robot0_eye_in_hand_image']
         elif isinstance(view, list):
             views = view
         elif isinstance(view, str):
@@ -1620,7 +1638,8 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
         # target latent
         # print(f"Shape of predicted action: {predicted_action.shape} and perturbations: {torch.tensor(cfg.perturbations).shape}")
         if target_action is None:
-            target_action = predicted_action + torch.tensor(cfg.perturbations).unsqueeze(0).to(obs_dict['agentview_image'].device)
+            target_action = predicted_action + torch.tensor(cfg.perturbations).unsqueeze(0).to(
+                obs_dict['agentview_image'].device)
         # print(f"Prediction Action: {predicted_action} and Target Action: {target_action}")
         batch = {}
         batch['obs'] = obs_dict
@@ -1640,17 +1659,16 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
             obs_dict[view] = torch.clamp(obs_dict[view], cfg.clip_min, cfg.clip_max)
             if obs_dict[view].grad is not None:
                 obs_dict[view].grad.zero_()
-        
+
         return obs_dict
 
-
-    def apply_pgd_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_pgd_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         """
         Apply projected gradient descent attack from Madry et al. (2017)
         """
         view = cfg.view
         if view == 'both':
-                views = ['agentview_image', 'robot0_eye_in_hand_image']                
+            views = ['agentview_image', 'robot0_eye_in_hand_image']
         elif isinstance(view, list):
             views = view
         elif isinstance(view, str):
@@ -1679,14 +1697,12 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                 adv_obs_dict[view] = torch.clamp(adv_obs_dict[view], clip_min, clip_max)
         return adv_obs_dict
 
-
-
     def run(self, policy: BaseImagePolicy, epsilon: float, cfg):
         self.epsilon = epsilon
         device = policy.device
         dtype = policy.dtype
         env = self.env
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -1707,17 +1723,17 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -1725,9 +1741,9 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
-            
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
+
             done = False
             self.step = 0
             while not done:
@@ -1737,12 +1753,12 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 # print(type(obs_dict), obs_dict['agentview_image'].shape)
 
                 # apply attack
@@ -1758,6 +1774,7 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                     raise ValueError("Invalid attack type")
                 self.step += 1
 
+
 class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1765,13 +1782,13 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
         The runner class for the adversarial attacks on the Diffusion Policy
         """
 
-    def apply_fgsm_attack(self, obs_dict, policy:BaseImagePolicy, cfg, target_action=None):
+    def apply_fgsm_attack(self, obs_dict, policy: BaseImagePolicy, cfg, target_action=None):
         """
-        Applys the FGSM attack to the input image 
+        Applys the FGSM attack to the input image
         """
         view = cfg.view
         if view == 'both':
-            views = ['agentview_image', 'robot0_eye_in_hand_image']                
+            views = ['agentview_image', 'robot0_eye_in_hand_image']
         elif isinstance(view, list):
             views = view
         elif isinstance(view, str):
@@ -1788,7 +1805,8 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
         # print(f'Predicted Action shape: {predicted_action.shape}')
 
         if target_action is None:
-            target_action = predicted_action + torch.tensor(cfg.perturbations).unsqueeze(0).to(obs_dict['agentview_image'].device)
+            target_action = predicted_action + torch.tensor(cfg.perturbations).unsqueeze(0).to(
+                obs_dict['agentview_image'].device)
         batch = {}
         batch['obs'] = obs_dict
         batch['action'] = target_action
@@ -1796,7 +1814,7 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
         loss = -loss
         print("Loss: ", loss.item())
         if cfg.log:
-            wandb.log({"loss":loss.item()})
+            wandb.log({"loss": loss.item()})
         loss.backward()
         for view in views:
             grad = torch.sign(obs_dict[view].grad)
@@ -1811,7 +1829,7 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
                 obs_dict[view].grad.zero_()
         return obs_dict
 
-    def apply_pgd_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_pgd_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         """
         Apply projected gradient descent attack from Madry et al. (2017)
         """
@@ -1822,7 +1840,7 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
         device = policy.device
         dtype = policy.dtype
         env = self.env
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -1846,17 +1864,17 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -1864,9 +1882,9 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
-            
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
+
             done = False
             self.step = 0
             while not done:
@@ -1876,12 +1894,12 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 # self.observations.append(obs_dict)
                 # print(type(obs_dict), obs_dict['agentview_image'].shape)
                 # apply attack
@@ -1902,7 +1920,7 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
                     perturbation = abs(obs_dict[view] - prev_obs_dict[view])
                     if cfg.log:
                         wandb.log({f'perturbation_{view}_l2': torch.norm(perturbation, p=2), \
-                                    f'perturbation_{view}_linf': torch.norm(perturbation, p=float('inf'))})
+                                   f'perturbation_{view}_linf': torch.norm(perturbation, p=float('inf'))})
                     # print(f"Norm of perturbation_{view}: ", torch.norm(perturbation, p=2), torch.norm(perturbation, p=float('inf')))
                 perturbed_agentview_images.append(obs_dict['agentview_image'][1][1])
                 perturbed_robot0_eye_in_hand_images.append(obs_dict['robot0_eye_in_hand_image'][1][1])
@@ -1924,8 +1942,7 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
             all_video_paths[this_global_slice] = env.render()[this_local_slice]
             all_rewards[this_global_slice] = env.call('get_attr', 'reward')[this_local_slice]
             pbar.close()
-            # log the 
-
+            # log the
 
         def visualize(observations1, observations2, file_name, every_frame=2):
             # only get alternate frames to reduce the processing time
@@ -1937,10 +1954,10 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
             for i in range(len(observations1)):
                 agentview_image1 = observations1[i].cpu().detach().numpy()
                 agentview_image1 = np.transpose(agentview_image1, (1, 2, 0))
-                
+
                 agentview_image2 = observations2[i].cpu().detach().numpy()
                 agentview_image2 = np.transpose(agentview_image2, (1, 2, 0))
-                
+
                 combined_image = np.hstack((agentview_image1, agentview_image2))
                 im.append(combined_image)
 
@@ -1953,11 +1970,10 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
 
             ani = ArtistAnimation(fig, ims, interval=100, blit=True)
             ani.save(file_name, writer='pillow', fps=10)
-        
+
         # visualize the perturbed images
         filename = "/teamspace/studios/this_studio/bc_attacks/diffusion_policy/plots/videos/diffusion_policy_perturbations/pgd_perturbations.gif"
         visualize(perturbed_agentview_images, perturbed_robot0_eye_in_hand_images, filename, every_frame=2)
-
 
         # clear out video buffer
         _ = env.reset()
@@ -1969,24 +1985,23 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
             prefix = self.env_prefixs[i]
             max_reward = np.max(all_rewards[i])
             max_rewards[prefix].append(max_reward)
-            log_data[prefix+f'sim_max_reward_{seed}'] = max_reward
+            log_data[prefix + f'sim_max_reward_{seed}'] = max_reward
 
             # visualize sim
             video_path = all_video_paths[i]
             if video_path is not None:
                 sim_video = wandb.Video(video_path)
-                log_data[prefix+f'sim_video_{seed}'] = sim_video
-        
+                log_data[prefix + f'sim_video_{seed}'] = sim_video
+
         # log aggregate metrics
         for prefix, value in max_rewards.items():
-            name = prefix+'mean_score'
+            name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
         # save the observation dicts as a pickle file
         # pickle.dump(self.observations, open(f"/teamspace/studios/this_studio/bc_attacks/diffusion_policy/plots/pkl_files/diffusion_policy_observed_dicts.pkl", "wb"))
         return log_data
 
-            
 
 class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
     def __init__(self, *args, **kwargs):
@@ -1995,9 +2010,9 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
         The runner class for the adversarial attacks on the BET Policy
         """
 
-    def apply_fgsm_attack(self, obs_dict, policy:BaseImagePolicy, cfg, predicted_action=None):
+    def apply_fgsm_attack(self, obs_dict, policy: BaseImagePolicy, cfg, predicted_action=None):
         """
-        Applies the FGSM attack to the input image 
+        Applies the FGSM attack to the input image
         """
         view = cfg.view
         if view == 'both':
@@ -2022,7 +2037,7 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
             loss = -loss
         loss.backward()
         if cfg.log:
-            wandb.log({"loss":loss.item()})
+            wandb.log({"loss": loss.item()})
         for view in views:
             grad = torch.sign(obs_dict[view].grad)
             # log the gradient norm for each view
@@ -2037,8 +2052,7 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                 obs_dict[view].grad.zero_()
         return obs_dict
 
-
-    def apply_pgd_attack(self, obs_dict, policy:BaseImagePolicy, cfg):
+    def apply_pgd_attack(self, obs_dict, policy: BaseImagePolicy, cfg):
         """
         Apply projected gradient descent attack from Madry et al. (2017)
         """
@@ -2060,7 +2074,8 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
         with torch.no_grad():
             predicted_action = policy.predict_action(obs_dict)['action']
             if cfg.targeted:
-                predicted_action = predicted_action + torch.tensor(cfg.perturbations).to(obs_dict['agentview_image'].device)
+                predicted_action = predicted_action + torch.tensor(cfg.perturbations).to(
+                    obs_dict['agentview_image'].device)
         for i in range(num_iter):
             policy.zero_grad()
             adv_obs_dict = self.apply_fgsm_attack(adv_obs_dict, policy, cfg, predicted_action)
@@ -2073,13 +2088,13 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                 adv_obs_dict[view] = obs_dict[view] + perturbation
                 adv_obs_dict[view] = torch.clamp(adv_obs_dict[view], clip_min, clip_max)
         return adv_obs_dict
-    
+
     def run(self, policy: BaseImagePolicy, epsilon: float, cfg):
         self.epsilon = epsilon
         device = policy.device
         dtype = policy.dtype
         env = self.env
-        
+
         # plan for rollout
         n_envs = len(self.env_fns)
         n_inits = len(self.env_init_fn_dills)
@@ -2103,17 +2118,17 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
             end = min(n_inits, start + n_envs)
             this_global_slice = slice(start, end)
             this_n_active_envs = end - start
-            this_local_slice = slice(0,this_n_active_envs)
-            
+            this_local_slice = slice(0, this_n_active_envs)
+
             this_init_fns = self.env_init_fn_dills[this_global_slice]
             n_diff = n_envs - len(this_init_fns)
             if n_diff > 0:
-                this_init_fns.extend([self.env_init_fn_dills[0]]*n_diff)
+                this_init_fns.extend([self.env_init_fn_dills[0]] * n_diff)
             assert len(this_init_fns) == n_envs
 
             # init envs
-            env.call_each('run_dill_function', 
-                args_list=[(x,) for x in this_init_fns])
+            env.call_each('run_dill_function',
+                          args_list=[(x,) for x in this_init_fns])
 
             # start rollout
             obs = env.reset()
@@ -2121,9 +2136,9 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
             policy.reset()
 
             env_name = self.env_meta['env_name']
-            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx+1}/{n_chunks}", 
-                leave=False, mininterval=self.tqdm_interval_sec)
-            
+            pbar = tqdm.tqdm(total=self.max_steps, desc=f"Eval {env_name}Image {chunk_idx + 1}/{n_chunks}",
+                             leave=False, mininterval=self.tqdm_interval_sec)
+
             done = False
             self.step = 0
             while not done:
@@ -2132,12 +2147,12 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                 if self.past_action and (past_action is not None):
                     # TODO: not tested
                     np_obs_dict['past_action'] = past_action[
-                        :,-(self.n_obs_steps-1):].astype(np.float32)
-                
+                                                 :, -(self.n_obs_steps - 1):].astype(np.float32)
+
                 # device transfer
-                obs_dict = dict_apply(np_obs_dict, 
-                    lambda x: torch.from_numpy(x).to(
-                        device=device))
+                obs_dict = dict_apply(np_obs_dict,
+                                      lambda x: torch.from_numpy(x).to(
+                                          device=device))
                 # self.observations.append(obs_dict)
                 # print(type(obs_dict), obs_dict['agentview_image'].shape)
                 # apply attack
@@ -2146,7 +2161,8 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                     if cfg.targeted:
                         with torch.no_grad():
                             predicted_action = policy.predict_action(obs_dict)['action']
-                            predicted_action = predicted_action + torch.tensor(cfg.perturbations).to(obs_dict['agentview_image'].device)
+                            predicted_action = predicted_action + torch.tensor(cfg.perturbations).to(
+                                obs_dict['agentview_image'].device)
                         obs_dict = self.apply_fgsm_attack(obs_dict, policy, cfg, predicted_action)
                     else:
                         obs_dict = self.apply_fgsm_attack(obs_dict, policy, cfg)
@@ -2164,7 +2180,7 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
                     perturbation = abs(obs_dict[view] - prev_obs_dict[view])
                     if cfg.log:
                         wandb.log({f'perturbation_{view}_l2': torch.norm(perturbation, p=2), \
-                                    f'perturbation_{view}_linf': torch.norm(perturbation, p=float('inf'))})
+                                   f'perturbation_{view}_linf': torch.norm(perturbation, p=float('inf'))})
                     # print(f"Norm of perturbation_{view}: ", torch.norm(perturbation, p=2), torch.norm(perturbation, p=float('inf')))
                 # perturbed_agentview_images.append(obs_dict['agentview_image'][1][0])
                 # perturbed_robot0_eye_in_hand_images.append(obs_dict['robot0_eye_in_hand_image'][1][1])
@@ -2189,29 +2205,28 @@ class AdversarialRobomimicImageRunnerBET(RobomimicImageRunner):
 
         # clear out video buffer
         _ = env.reset()
-        
+
         # log
         max_rewards = collections.defaultdict(list)
         log_data = dict()
 
         for i in range(n_inits):
-                seed = self.env_seeds[i]
-                prefix = self.env_prefixs[i]
-                max_reward = np.max(all_rewards[i])
-                max_rewards[prefix].append(max_reward)
-                log_data[prefix+f'sim_max_reward_{seed}'] = max_reward
+            seed = self.env_seeds[i]
+            prefix = self.env_prefixs[i]
+            max_reward = np.max(all_rewards[i])
+            max_rewards[prefix].append(max_reward)
+            log_data[prefix + f'sim_max_reward_{seed}'] = max_reward
 
-                # visualize sim
-                video_path = all_video_paths[i]
-                if video_path is not None:
-                    sim_video = wandb.Video(video_path)
-                    log_data[prefix+f'sim_video_{seed}'] = sim_video
-            
+            # visualize sim
+            video_path = all_video_paths[i]
+            if video_path is not None:
+                sim_video = wandb.Video(video_path)
+                log_data[prefix + f'sim_video_{seed}'] = sim_video
+
         # log aggregate metrics
         for prefix, value in max_rewards.items():
-            name = prefix+'mean_score'
+            name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
 
         return log_data
-
