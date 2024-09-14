@@ -441,7 +441,7 @@ class RobomimicImageRunner(BaseImageRunner):
                         im = observations[j][i][0].transpose(1, 2, 0)
                     ims.append([ax.imshow(im)])
                 save_path = Path(cfg.patch_path).parent
-                save_path = save_path.joinpath(f'vis_{i}.gif')
+                save_path = save_path.joinpath(f'{cfg.exp_name}_vis_{i}.gif')
                 print(f"Saving video to {save_path}")
 
                 if os.path.exists(save_path):
@@ -451,7 +451,7 @@ class RobomimicImageRunner(BaseImageRunner):
                 ani.save(str(save_path), writer='pillow')
                 plt.close(fig)
                 #
-                wandb.log({f'vis_{i}': wandb.Image(str(save_path))})
+                wandb.log({f'{cfg.exp_name}_vis_{i}': wandb.Image(str(save_path))})
 
         # results reported in the paper are generated using the commented out line below
         # which will only report and average metrics from first n_envs initial condition and seeds
@@ -1972,7 +1972,7 @@ class AdversarialRobomimicImageRunnerDP(RobomimicImageRunner):
             ani.save(file_name, writer='pillow', fps=10)
 
         # visualize the perturbed images
-        filename = "/teamspace/studios/this_studio/bc_attacks/diffusion_policy/plots/videos/diffusion_policy_perturbations/pgd_perturbations.gif"
+        filename = "//home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/plots/videos/diffusion_policy_perturbations/pgd_perturbations.gif"
         visualize(perturbed_agentview_images, perturbed_robot0_eye_in_hand_images, filename, every_frame=2)
 
         # clear out video buffer

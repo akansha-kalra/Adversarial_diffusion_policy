@@ -32,7 +32,7 @@ env_runner:
   n_train: 6
   n_train_vis: 2
   train_start_idx: 0
-  n_test: 12
+  n_test: 50
   n_test_vis: 4
   test_start_seed: 100000
   # use python's eval function as resolver, single-quoted string as argument

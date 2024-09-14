@@ -255,8 +255,9 @@ class TrainRobomimicUniPertImageWorkspace(BaseWorkspace):
         torch.manual_seed(seed)
         np.random.seed(seed)
         random.seed(seed)
-
         checkpoint = cfg.checkpoint
+        print(f" Check you are seeding correctly {seed} for {checkpoint} with num_test envs {cfg.task.env_runner.n_test} and n_envs {cfg.task.env_runner.n_envs}")
+
         payload = torch.load(open(checkpoint, 'rb'), pickle_module=dill)
         cfg_loaded = payload['cfg']
 
@@ -421,9 +422,9 @@ class TrainRobomimicUniPertImageWorkspace(BaseWorkspace):
                         wandb.log({"test_mean_score": test_mean_score, "epoch": self.epoch})
                     # save the patch
                     if cfg.targeted:
-                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'tar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{cfg.view}.pkl')
+                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_tar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{cfg.view}.pkl')
                     else:
-                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'untar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{cfg.view}.pkl')
+                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_untar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{cfg.view}.pkl')
                     pickle.dump(self.univ_pert, open(patch_path, 'wb'))
                 self.epoch += 1
         # gradients_path = os.path.join(os.path.dirname(cfg.checkpoint), f'gradients_untar_pert_{cfg.epsilon}_{cfg.gamma}_feature_dist.pkl')
@@ -590,9 +591,9 @@ class TrainRobomimicUniPertImageWorkspaceRNN(BaseWorkspace):
                         wandb.log({"test_mean_score": test_mean_score, "epoch": self.epoch})
                     # save the patch
                     if cfg.targeted:
-                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'tar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}.pkl')
+                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_tar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}.pkl')
                     else:
-                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'untar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}.pkl')
+                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_untar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}.pkl')
                     pickle.dump(self.univ_pert, open(patch_path, 'wb'))
                 self.epoch += 1
         # gradients_path = os.path.join(os.path.dirname(cfg.checkpoint), f'gradients_untar_pert_{cfg.epsilon}.pkl')
@@ -749,12 +750,12 @@ class TrainRobomimicUniPertImageWorkspaceIBC(BaseWorkspace):
                         wandb.log({"test_mean_score": test_mean_score, "epoch": self.epoch})
                     # save the patch
                     if cfg.targeted:
-                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'tar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}_feature_std.pkl')
+                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_tar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}_feature_std.pkl')
                     else:
-                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'untar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}_feature_std.pkl')
+                        patch_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_untar_pert_{cfg.epsilon}_epoch_{self.epoch}_mean_score_{test_mean_score}_{view}_feature_std.pkl')
                     pickle.dump(self.univ_pert, open(patch_path, 'wb'))
                 self.epoch += 1
-        gradients_path = os.path.join(os.path.dirname(cfg.checkpoint), f'gradients_untar_pert_{cfg.epsilon}.pkl')
+        gradients_path = os.path.join(os.path.dirname(cfg.checkpoint), f'{cfg.exp_name}_gradients_untar_pert_{cfg.epsilon}.pkl')
         pickle.dump(gradients, open(gradients_path, 'wb'))
         wandb.finish()
 
