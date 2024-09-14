@@ -365,11 +365,11 @@ class TrainRobomimicUniPertImageWorkspaceDP(BaseWorkspace):
 
         if cfg.log:
             wandb.init(
-                project="offline_bc_evaluation",
-                name=f"diffusion_policy_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
+                project="Adv_diffusion_policy",
+                name=f"{cfg.exp_name}-diffusion_policy_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
             )
-            wandb.log(
-                {"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view})
+            wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view,
+                 "seed":cfg.training.seed})
         # set the model in eval mode
         self.model.eval()
         # training loop for the universal perturbation
