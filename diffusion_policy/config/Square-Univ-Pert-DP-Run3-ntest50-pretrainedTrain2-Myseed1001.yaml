@@ -7,7 +7,7 @@ name: train_diffusion_unet_hybrid
 _target_: diffusion_policy.workspace.train_diffusion_unet_hybrid_workspace.TrainRobomimicUniPertImageWorkspaceDP
 
 
-checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_2/checkpoints/epoch=2050-test_mean_score=0.955.ckpt'
+checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_2/checkpoints/epoch=2600-test_mean_score=1.000.ckpt'
 epsilon: 0.125
 epsilon_step: 0.05
 task_name: ${task.name}
@@ -26,7 +26,7 @@ perturbations: [0.25, 0.25, 0, 0, 0, 0, 0]
 log: True
 save_video: True
 n_vis: 4
-patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/diffusion_policy_cnn/train_0/checkpoints/untar_pert_0.0625_epoch_25_mean_score_0.98_robot0_eye_in_hand_image.pkl'
+patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/diffusion_policy_cnn/train_2/checkpoints/untar_pert_0.0625_epoch_25_mean_score_0.98_robot0_eye_in_hand_image.pkl'
 
 horizon: 16
 n_obs_steps: 2
@@ -108,7 +108,7 @@ training:
   resume: True
   # optimization
   lr_scheduler: cosine
-    lr_warmup_steps: 500
+  lr_warmup_steps: 500
   num_epochs: 50
   gradient_accumulate_every: 1
   # EMA destroys performance when used with BatchNorm

@@ -375,16 +375,18 @@ class RobomimicImageRunner(BaseImageRunner):
                 # for i in range(action.shape[-1]):
                 #     print(f"l1_distance_{i}: {torch.norm(action_dict['action'][:,:,i] - clean_action_dict['action'][:,:,i], p=1) / action.shape[0]}")
                 if cfg.targeted and cfg.log:
-                    try:
-                        # log the l1 distance between the predicted action and the target action per environment
-                        target_action = clean_action_dict['action'].to('cpu') + adversarial_patch['perturbations'].to(
-                            'cpu')
-                        for i in range(target_action.shape[-1]):
-                            wandb.log({f"l1_distance_{i}": torch.norm(
-                                action_dict['action'][:, :, i].to('cpu') - target_action[:, :, i], p=1) /
-                                                           target_action.shape[0]})
-                    except KeyError:
-                        pass
+                    pass
+                    #COMMENTED FOR IBC
+                    # try:
+                    #     # log the l1 distance between the predicted action and the target action per environment
+                    #     target_action = clean_action_dict['action'].to('cpu') + adversarial_patch['perturbations'].to(
+                    #         'cpu')
+                    #     for i in range(target_action.shape[-1]):
+                    #         wandb.log({f"l1_distance_{i}": torch.norm(
+                    #             action_dict['action'][:, :, i].to('cpu') - target_action[:, :, i], p=1) /
+                    #                                        target_action.shape[0]})
+                    # except KeyError:
+                    #     pass
                 # features = np_action_dict['features']
                 # clean_features = np_clean_action_dict['features']
                 # random_features = np_random_action_dict['features']

@@ -17,7 +17,7 @@ epsilon: 0.125
 epsilon_step: 0.01
 task_name: ${task.name}
 shape_meta: ${task.shape_meta}
-exp_name: "Targeted-Square-Univ-Pert-DP-Run2-ntest50-pretrainedTrain0-Myseed123"
+exp_name: "Final-Targeted-Square-Univ-Pert-DP-Run2-ntest50-pretrainedTrain1-Myseed123"
 # view: "robot0_eye_in_hand_image"
 view: "both"
 # view: 'image'

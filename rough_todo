@@ -1,2 +1,9 @@
 1st - square- IBC , Diffusion, BC-RNN - 3 seeds - attacks - fgsm , pgd, univ_pertubation  param and epsilon 
  reproduce CARLA-BET - same results as them - adv attacks - univ pertubatiion 
+
+
+HYDRA_FULL_ERROR=1 python3 train.py --config-name=Run1-untargeted-train_univ_pert_ibc_image_workspace_Square_PH.yaml  --config-dir=/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/config/
+
+HYDRA_FULL_ERROR=1 python3 train.py --config-name=Run3-train_targeted_univ_pert_diffusion_unet_hybrid_workspace_Square_PH_Image.yaml --config-dir=/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/config/
+
+train vqbet

@@ -306,6 +306,8 @@ class TrainRobomimicUniPertImageWorkspaceDP(BaseWorkspace):
         random.seed(seed)
 
         checkpoint = cfg.checkpoint
+        print(f" Check you are seeding correctly {seed} for {checkpoint} with num_test envs {cfg.task.env_runner.n_test} and n_envs {cfg.task.env_runner.n_envs}")
+
         payload = torch.load(open(checkpoint, 'rb'), pickle_module=dill)
         cfg_loaded = payload['cfg']
 
@@ -369,7 +371,7 @@ class TrainRobomimicUniPertImageWorkspaceDP(BaseWorkspace):
                 name=f"{cfg.exp_name}-diffusion_policy_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}"
             )
             wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view,
-                 "seed":cfg.training.seed})
+                 "seed":cfg.training.seed,"pretrained_checkpoint" :str(cfg.checkpoint)})
         # set the model in eval mode
         self.model.eval()
         # training loop for the universal perturbation

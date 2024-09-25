@@ -1,0 +1,99 @@
+defaults:
+  - _self_
+  - task: square_image
+name: train_robomimic_image
+# _target_: diffusion_policy.workspace.train_robomimic_image_workspace.TrainRobomimicImageWorkspace
+_target_: diffusion_policy.workspace.train_robomimic_image_workspace.TrainRobomimicUniPertImageWorkspaceRNN
+
+checkpoints:
+    # train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_0/checkpoints/epoch=1100-test_mean_score=1.000.ckpt'
+    # train1: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_1/checkpoints/epoch=0300-test_mean_score=1.000.ckpt'
+    # train2: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_2/checkpoints/epoch=0300-test_mean_score=1.000.ckpt'
+    train0: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/lstm_gmm/train_0/checkpoints/epoch=1400-test_mean_score=0.864.ckpt'
+
+checkpoint: ${checkpoints.train0}
+epsilon: 0.0625
+epsilon_step: 0.01
+task_name: ${task.name}
+shape_meta: ${task.shape_meta}
+exp_name: "FINAL-Targeted-Square-Univ-Pert-LSTM-GMM-Run1-ntest50-pretrainedTrain0-Myseed0"
+# view: "robot0_eye_in_hand_image"
+#view: "image"   # pusht
+view: "both"  # robomimic task
+# view: 'agentview_image'
+clip_min: 0
+clip_max: 1
+horizon: &horizon 1
+n_obs_steps: 1
+n_action_steps: 1
+n_latency_steps: 0
+dataset_obs_steps: *horizon
+past_action_visible: False
+keypoint_visible_rate: 1.0
+targeted: True
+perturbations: [0.15, 0.15, 0, 0, 0, 0, 0]
+log: True
+save_video: True
+n_vis: 3
+
+patch_path: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/lstm_gmm/train_0/checkpoints/epoch=1400-test_mean_score=0.864.ckpt'
+
+policy:
+  _target_: diffusion_policy.policy.robomimic_image_policy.RobomimicImagePolicy
+  shape_meta: ${shape_meta}
+  algo_name: bc_rnn
+  obs_type: image
+  # oc.select resolver: key, default
+  task_name: ${oc.select:task.task_name,square}
+  dataset_type: ${oc.select:task.dataset_type,ph}
+  crop_shape: [76,76]
+
+
+dataloader:
+  batch_size: 512
+  num_workers: 10
+  shuffle: True
+  pin_memory: True
+  persistent_workers: False
+val_dataloader:
+  batch_size: 64
+  num_workers: 10
+  shuffle: False
+  pin_memory: True
+  persistent_workers: False
+training:
+  device: "cuda:0"
+  seed: 0
+  debug: False
+  resume: True
+  # optimization
+  num_epochs: 50
+  # training loop control
+  # in epochs
+  rollout_every: 25
+  checkpoint_every: 100
+  val_every: 1
+  sample_every: 5
+  # steps per epoch
+  max_train_steps: null
+  max_val_steps: null
+  # misc
+  tqdm_interval_sec: 1.0
+
+logging:
+  project: Adv_diffusion_policy
+  resume: True
+  mode: online
+  name: ${exp_name}_${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
+  tags: ["${name}", "${task_name}", "${exp_name}"]
+  id: null
+  group: null
+
+hydra:
+  job:
+    override_dirname: ${name}
+  run:
+    dir: data/outputs/${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+  sweep:
+    dir: data/outputs/${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+    subdir: ${hydra.job.num}

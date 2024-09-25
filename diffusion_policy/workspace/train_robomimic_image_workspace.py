@@ -320,7 +320,7 @@ class TrainRobomimicUniPertImageWorkspace(BaseWorkspace):
                 project="Adv_diffusion_policy",
                 name=f"{cfg.exp_name}-vanilla_bc_{cfg.epsilon}_targeted_{cfg.targeted}_view_{view}_feature_std"
             )
-            wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view})
+            wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": view,"seed": cfg.training.seed, "pretrained_checkpoint":str(cfg.checkpoint)})
         # set the model in eval mode
         self.model.eval()
         # training loop for the universal perturbation

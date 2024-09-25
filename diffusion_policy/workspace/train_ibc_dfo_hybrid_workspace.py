@@ -286,6 +286,9 @@ class TrainUnivPertIbcDfoHybridWorkspace(BaseWorkspace):
         random.seed(seed)
 
         checkpoint = cfg.checkpoint
+        print(
+            f" Check you are seeding correctly {seed} for {checkpoint} with num_test envs {cfg.task.env_runner.n_test} and n_envs {cfg.task.env_runner.n_envs}")
+
         payload = torch.load(open(checkpoint, 'rb'), pickle_module=dill)
         cfg_loaded = payload['cfg']
 
@@ -338,7 +341,8 @@ class TrainUnivPertIbcDfoHybridWorkspace(BaseWorkspace):
                 project="Adv_diffusion_policy",
                 name=f"{cfg.exp_name}-ibc_dfo_{cfg.epsilon}_targeted_{cfg.targeted}_view_{cfg.view}"
             )
-            wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": cfg.view})
+            wandb.log({"epsilon": cfg.epsilon, "epsilon_step": cfg.epsilon_step, "targeted": cfg.targeted, "view": cfg.view
+                       ,"seed" : cfg.training.seed , "pretrained_checkpoint": str(cfg.checkpoint)})
 
         # save batch for sampling
         train_sampling_batch = None
@@ -362,8 +366,10 @@ class TrainUnivPertIbcDfoHybridWorkspace(BaseWorkspace):
         To = self.model.n_obs_steps
         Ta = self.model.n_action_steps
         T = self.model.horizon
+        print(f"N_Obs_Steps {To} and N_Action_Steps {Ta} and horizon {T}")
         B = cfg.dataloader.batch_size
         naction_stats = self.model.get_naction_stats()
+        print(f"Action Stats {naction_stats}")
         action_dist = torch.distributions.Uniform(
             low = naction_stats['min'],
             high=naction_stats['max']
@@ -397,6 +403,8 @@ class TrainUnivPertIbcDfoHybridWorkspace(BaseWorkspace):
                         # device transfer
                         batch = dict_apply(batch, lambda x: x.to(device, non_blocking=True))
                         obs = batch['obs'].copy()
+                        if batch['obs'][view].shape[0] != B:
+                            continue
                         for view in views:
                             obs[view] = obs[view] + self.univ_pert[view]
                             # clamp the observation to be between 0 and 1
