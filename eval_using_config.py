@@ -36,10 +36,10 @@ def init_wandb(checkpoint, cfg, attack, view):
     # Try to find an existing run with a similar name
     api = wandb.Api()
     # project = "grad_check_adv"
-    project = "BC_Evaluation"
+    project = "Adv_diffusion_policy"
     # project = "transferability_adv"
     # project = "vanilla_bc_image_policy"
-    runs = api.runs(f"sagar8/{project}")
+    runs = api.runs(f"akanshakalracmu/{project}")
 
     existing_run = None
     for run in runs:
@@ -69,7 +69,8 @@ def init_wandb(checkpoint, cfg, attack, view):
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='ibc_image_ph_pick_pgd_adversarial.yaml')
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_pusht.yaml')
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='lstm_gmm_image_pusht.yaml')
-@hydra.main(config_path='diffusion_policy/eval_configs', config_name='vqbet_robomimic_image_ph_pick_adversarial.yaml')
+# @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_pgd_adversarial_Square_PH.yaml')
+@hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH.yaml')
 def main(cfg):
     checkpoint = cfg.checkpoint
     task = cfg.task
@@ -79,12 +80,13 @@ def main(cfg):
     attack = cfg.attack
     epsilon = cfg.epsilon
     dataset_path = cfg.dataset_path
+    print(f" Dataset path: {dataset_path}")
     view = cfg.view
     print(f"Running attack {attack} on {view} view")
 
     # the output directory should depend on the current directory and the checkpoint path and the attack type and epsilon
     output_dir = os.path.join(os.getcwd(),
-                              f"diffusion_policy/data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}")
+                              f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}")
     if os.path.exists(output_dir):
         raise ValueError(f"Output path {output_dir} already exists!")
 
@@ -136,14 +138,16 @@ def main(cfg):
         # wandb.init(project='diffusion_experimentation', name=f'diffusion_policy_norm_monitoring')
         # wandb.init(project='adv_patch_test', name=f'lstm_gmm_{checkpoint.split("/")[-3]}_{cfg.patch_type}_patch')
         # wandb.init(project='adv_patch_test', name=f'vanilla_bc_{checkpoint.split("/")[-3]}_{cfg.patch_type}_patch')
+
         wandb_run = init_wandb(checkpoint, cfg, attack, view)
         print("Wandb run initialized", wandb_run)
         config_path = 'diffusion_policy/eval_configs'
-        # config_name = 'diffusion_policy_image_ph_pick_pgd_adversarial'
+        config_name = 'diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH'
+        # config_name = 'diffusion_policy_image_ph_pick_pgd_adversarial_Square_PH'
         # config_name = 'vanilla_bc_ph_pick_adversarial_patch'
         # config_name = 'ibc_image_ph_pick_adversarial'
         # config_name = 'lstm_gmm_image_ph_pick_adversarial'
-        config_name = 'bet_image_ph_pick_adversarial'
+        # config_name = 'bet_image_ph_pick_adversarial'
         # config_name = 'ibc_image_ph_pick_pgd_adversarial'
         # config_name = 'vanilla_bc_image_ph_pick_pgd_adversarial'
         # wandb.log({"xloc": cfg.x_loc, "yloc": cfg.y_loc, "patch_size": cfg.patch_size})

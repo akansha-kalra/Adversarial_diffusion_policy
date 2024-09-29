@@ -30,8 +30,6 @@ from torch import einsum, nn
 from torch.cuda.amp import autocast
 from torch.optim import Optimizer
 
-from lerobot.common.policies.vqbet.configuration_vqbet import VQBeTConfig
-
 # ruff: noqa: N806
 
 """
@@ -171,7 +169,7 @@ class GPT(nn.Module):
     https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py
     """
 
-    def __init__(self, config: VQBeTConfig):
+    def __init__(self, config):
         """
         GPT model gets hyperparameters from a config object. Please refer configuration_vqbet.py for more details.
         """

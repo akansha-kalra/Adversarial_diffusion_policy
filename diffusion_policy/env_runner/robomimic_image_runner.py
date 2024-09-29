@@ -31,8 +31,8 @@ import random
 
 # for deterministic results
 os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'  # or ':16:8'
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
+# torch.backends.cudnn.deterministic = False
+# torch.backends.cudnn.benchmark = False
 
 
 def create_env(env_meta, shape_meta, enable_render=True):
@@ -83,7 +83,7 @@ class RobomimicImageRunner(BaseImageRunner):
                  past_action=False,
                  abs_action=False,
                  tqdm_interval_sec=5.0,
-                 n_envs=None
+                 n_envs=None,
                  ):
         super().__init__(output_dir)
 
@@ -266,7 +266,7 @@ class RobomimicImageRunner(BaseImageRunner):
         device = policy.device
         dtype = policy.dtype
         env = self.env
-        torch.use_deterministic_algorithms(True)
+        # torch.use_deterministic_algorithms(True)
 
         # plan for rollout
         n_envs = len(self.env_fns)

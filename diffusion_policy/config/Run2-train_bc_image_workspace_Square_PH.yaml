@@ -1,0 +1,99 @@
+defaults:
+  - _self_
+  # - task: lift_image
+  - task: square_image
+
+name: train_robomimic_image
+_target_: diffusion_policy.workspace.train_robomimic_image_workspace.TrainRobomimicImageWorkspace
+
+task_name: ${task.task_name}
+shape_meta: ${task.shape_meta}
+exp_name: "ALLFixed-Final-Run2-BC-Square-PH-Seed123"
+
+
+checkpoint:
+  save_last_ckpt: true
+  save_last_snapshot: false
+  topk:
+    format_str: epoch={epoch:04d}-test_mean_score={test_mean_score:.3f}.ckpt
+    k: 5
+    mode: max
+    monitor_key: test_mean_score
+dataloader:
+  batch_size: 64
+  num_workers: 16
+  persistent_workers: false
+  pin_memory: true
+  shuffle: true
+dataset_obs_steps: 1
+
+horizon: 1
+keypoint_visible_rate: 1.0
+n_vis: 3
+log: True
+targeted: False
+view: 'None'
+save_video: False
+patch_path: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/bc/train_1/garbage.txt'
+
+logging:
+  project: Adv_diffusion_policy
+  resume: True
+  mode: online
+  name: ${exp_name}_${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
+  tags: ["${name}", "${task_name}", "${exp_name}"]
+  id: null
+  group: null
+
+n_action_steps: 1
+n_latency_steps: 0
+n_obs_steps: 1
+
+past_action_visible: false
+
+
+policy:
+  _target_: diffusion_policy.policy.robomimic_image_policy.RobomimicImagePolicy
+  algo_name: bc
+  shape_meta: ${shape_meta}
+  task_name: ${task_name}
+
+
+
+training:
+  device: "cuda:0"
+  seed: 123
+  debug: False
+  resume: True
+  # optimization
+  lr_scheduler: cosine
+  lr_warmup_steps: 500
+  num_epochs: 400
+  gradient_accumulate_every: 1
+  # training loop control
+  # in epochs
+  rollout_every: 50
+  checkpoint_every: 50
+  val_every: 50
+  sample_every: 50
+  # steps per epo
+  max_train_steps: null
+  max_val_steps: null
+  # misc
+  tqdm_interval_sec: 1.0
+
+val_dataloader:
+  batch_size: 64
+  num_workers: 16
+  persistent_workers: false
+  pin_memory: true
+  shuffle: false
+
+hydra:
+  job:
+    override_dirname: ${name}
+  run:
+    dir: data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+  sweep:
+    dir: data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+    subdir: ${hydra.job.num}

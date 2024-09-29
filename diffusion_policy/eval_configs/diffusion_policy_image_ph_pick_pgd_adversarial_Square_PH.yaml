@@ -6,7 +6,7 @@ checkpoints:
 
     train2: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_2/checkpoints/epoch=2600-test_mean_score=1.000.ckpt'
 
-checkpoint: ${checkpoints.train2}
+checkpoint: ${checkpoints.train0}
 task: 'square_ph'
 dataset_path: '/home/ak/Documents/diffusion_policy/data/robomimic/datasets/square/ph/image_abs.hdf5'
 algo: 'Diffusion_Policy'
@@ -16,7 +16,7 @@ n_train: 2
 log: True
 device: 'cuda:0'
 attack: True
-attack_type: 'patch'
+attack_type: 'pgd'
 # patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vanilla_bc/train_0/checkpoints/untar_pert_0.0625_epoch_15_mean_score_0.62_robot0_eye_in_hand_image.pkl'
 # patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_0/checkpoints/untar_pert_0.0625_epoch_5_mean_score_0.0_robot0_eye_in_hand_image.pkl'
 # patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/ibc_dfo/train_0/checkpoints/untar_pert_0.0625_epoch_10_mean_score_0.82_robot0_eye_in_hand_image.pkl'
@@ -47,7 +47,7 @@ num_iter: 4
 norm: 'linf'
 attack_after_timesteps: 0.9
 max_steps: 400
-save_video: False
+save_video: True
 n_vis: 3
 # pgd:
 #  eta_bound:

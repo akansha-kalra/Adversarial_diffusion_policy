@@ -1,0 +1,165 @@
+defaults:
+  - _self_
+  - task: square_image
+
+checkpoints:
+#    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vqbet/train_0/checkpoints/epoch=0175-test_mean_score=1.000.ckpt'
+#    train1: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vqbet/train_1/checkpoints/epoch=0150-test_mean_score=1.000.ckpt'
+    train2: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/Latest-FR-Final-VQ-BET-Square-PH-Run3-Seed1001_2024.09.27/12.02.18_train_vq_bet_image_square_image/checkpoints/epoch=0200-test_mean_score=0.640.ckpt'
+
+checkpoint: ${checkpoints.train2}
+
+name: train_vq_bet_image
+_target_: diffusion_policy.workspace.train_vq_bet_image_workspace.TrainUniPertVQBeTImageWorkspace
+
+
+epsilon: 0.0625
+epsilon_step: 0.01
+attack: True
+task_name: ${task.name}
+shape_meta: ${task.shape_meta}
+exp_name: "FINAL-Targeted-Square-Univ-Pert-VQ-BET-Run3-ntest50-pretrainedTrain2-Myseed1001"
+clip_min: 0
+clip_max: 1
+perturbations: [0.15, 0.15, 0, 0, 0, 0, 0]
+
+horizon: &horizon 2
+n_obs_steps: 1
+n_action_steps: 1
+n_latency_steps: 0
+dataset_obs_steps: *horizon
+past_action_visible: False
+keypoint_visible_rate: 1.0
+save_video: True
+n_vis: 3
+log: True
+targeted: True
+view: 'both'
+patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vqbet/train_0/checkpoints/'
+policy:
+    _target_: diffusion_policy.policy.vq_bet_image_policy.VQBeTPolicy
+    shape_meta: ${task.shape_meta}
+    algo_name: "vq_bet_image"
+    config:
+    # Inputs / output structure.
+      n_obs_steps: 1
+      n_action_pred_token: 2
+      action_chunk_size: 1
+
+      input_shapes : {
+          "observation.image": [3, 96, 96],
+          "observation.state": [2],
+      }
+      # input_shapes: {
+      #     "observation.image_robot0": [3, 84, 84],
+      #     "observation.image_agentview": [3, 84, 84],
+      #     "observation.state": [7],
+      # }
+
+      output_shapes: {
+          "action": [2],
+      }
+
+      # Normalization / Unnormalization
+      input_normalization_modes: {
+          "observation.image": "mean_std",
+          "observation.state": "min_max",
+      }
+
+      output_unnormalization_modes: {
+          "action": "min_max",
+      }
+
+      # Architecture / modeling.
+      # Vision backbone.
+      vision_backbone: resnet18
+      crop_shape: [84, 84]
+      crop_is_random: True
+      pretrained_backbone_weights: null
+      use_group_norm: True
+      spatial_softmax_num_keypoints: 32
+      # VQ-VAE
+      n_vqvae_training_steps: 0
+      vqvae_n_embed: 16
+      vqvae_embedding_dim: 256
+      vqvae_enc_hidden_dim: 128
+      # VQ-BeT
+      gpt_block_size: 500
+      gpt_input_dim: 512
+      gpt_output_dim: 512
+      gpt_n_layer: 8
+      gpt_n_head: 8
+      gpt_hidden_dim: 512
+      dropout: 0.1
+      mlp_hidden_dim: 1024
+      offset_loss_weight: 10000.0
+      primary_code_loss_weight: 5.0
+      secondary_code_loss_weight: 0.5
+      bet_softmax_temperature: 0.1
+      sequentially_select: False
+
+
+dataloader:
+  batch_size: 64
+  num_workers: 10
+  shuffle: True
+  pin_memory: True
+  persistent_workers: False
+
+val_dataloader:
+  batch_size: 64
+  num_workers: 10
+  shuffle: False
+  pin_memory: True
+  persistent_workers: False
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1.0e-4
+  betas: [0.95, 0.999]
+  eps: 1.0e-8
+  weight_decay: 1.0e-6
+
+training:
+  device: "cuda:0"
+  seed: 1001
+  debug: False
+  resume: True
+  # optimization
+  lr_scheduler: cosine
+  lr_warmup_steps: 500
+  num_epochs: 75
+  gradient_accumulate_every: 1
+  # training loop control
+  # in epochs
+  rollout_every: 15
+  checkpoint_every: 15
+  val_every: 15
+  sample_every: 15
+  # steps per epoch
+  max_train_steps: null
+  max_val_steps: null
+  # misc
+  tqdm_interval_sec: 1.0
+
+logging:
+  project: Adv_diffusion_policy
+  resume: True
+  mode: online
+  name: ${exp_name}_${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}_${training.seed}_${policy.algo_name}_univ_pert
+  tags: ["${name}", "${task_name}", "${exp_name}"]
+  id: null
+  group: null
+
+multi_run:
+  run_dir: data/outputs/${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+  wandb_name_base: ${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
+
+hydra:
+  job:
+    override_dirname: ${name}
+  run:
+    dir: data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+  sweep:
+    dir: data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+    subdir: ${hydra.job.num}

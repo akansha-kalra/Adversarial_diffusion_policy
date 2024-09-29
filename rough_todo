@@ -7,3 +7,17 @@ HYDRA_FULL_ERROR=1 python3 train.py --config-name=Run1-untargeted-train_univ_per
 HYDRA_FULL_ERROR=1 python3 train.py --config-name=Run3-train_targeted_univ_pert_diffusion_unet_hybrid_workspace_Square_PH_Image.yaml --config-dir=/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/config/
 
 train vqbet
+
+for vqbet/robomimic
+need to set paths:
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ak/.mujoco/mujoco210/bin
+
+
+
+python robomimic_dataset_conversion.py -i /teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/square/ph/image.hdf5 -o /teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/square/ph/image_abs.hdf5 -e /teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/square/ph
+
+
+HYDRA_FULL_ERROR=1 python3 train.py --config-name=Run3-untargeted-train_univ_pert_diffusion_unet_hybrid_workspace_Square_PH_Image.yaml  --config-dir=/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/config/
+
+univ pert checkpoints are inside pre_trained_checkpoints folder

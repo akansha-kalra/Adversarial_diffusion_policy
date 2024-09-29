@@ -27,6 +27,7 @@ def main(cfg: OmegaConf):
     # will use the same time.
     OmegaConf.resolve(cfg)
     cls = hydra.utils.get_class(cfg._target_)
+    print(f"Check config task{cfg.task} and cfg task name {cfg.task.task_name}")
     workspace: BaseWorkspace = cls(cfg)
     workspace.run()
 
