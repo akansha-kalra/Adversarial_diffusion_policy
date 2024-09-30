@@ -86,7 +86,7 @@ def main(cfg):
 
     # the output directory should depend on the current directory and the checkpoint path and the attack type and epsilon
     output_dir = os.path.join(os.getcwd(),
-                              f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}")
+                              f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}")
     if os.path.exists(output_dir):
         raise ValueError(f"Output path {output_dir} already exists!")
 

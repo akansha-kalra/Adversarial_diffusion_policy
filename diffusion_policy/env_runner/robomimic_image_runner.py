@@ -1521,7 +1521,7 @@ class AdversarialRobomimicImageRunnerIBC(RobomimicImageRunner):
                 # perturbed_obs_dicts.append(obs_dict)
                 pickle.dump(clean_energy,
                             open(f"{energy_save_path}ibc_clean_energy_{self.epsilon}_timestep_{timestep}.pkl", "wb"))
-                pickle.dump(perturbed_energy,
+                pickfle.dump(perturbed_energy,
                             open(f"{energy_save_path}ibc_perturbed_energy_{self.epsilon}_timestep_{timestep}.pkl",
                                  "wb"))
 
