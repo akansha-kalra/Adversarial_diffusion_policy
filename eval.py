@@ -18,11 +18,11 @@ import wandb
 import json
 from diffusion_policy.workspace.base_workspace import BaseWorkspace
 
-@click.command()
-@click.option('-c', '--checkpoint', required=True)
-@click.option('-o', '--output_dir', required=True)
-@click.option('-d', '--device', default='cuda:0')
-def main(checkpoint, output_dir, device):
+# @click.command()
+# @click.option('-c', '--checkpoint', required=True)
+# @click.option('-o', '--output_dir', required=True)
+# @click.option('-d', '--device', default='cuda:0')
+def main(checkpoint, output_dir, device='cuda:0'):
     if os.path.exists(output_dir):
         click.confirm(f"Output path {output_dir} already exists! Overwrite?", abort=True)
     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -49,7 +49,8 @@ def main(checkpoint, output_dir, device):
     env_runner = hydra.utils.instantiate(
         cfg.task.env_runner,
         output_dir=output_dir)
-    runner_log = env_runner.run(policy)
+    runner_log = env_runner.run(policy,save_pkl=True)
+    # runner_log = env_runner.run(policy)
     
     # dump log to json
     json_log = dict()
@@ -62,4 +63,6 @@ def main(checkpoint, output_dir, device):
     json.dump(json_log, open(out_path, 'w'), indent=2, sort_keys=True)
 
 if __name__ == '__main__':
-    main()
+    chkpt='/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_1/checkpoints/epoch=2050-test_mean_score=0.955.ckpt'
+    output_dir='/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_1/checkpoints/eval/'
+    main(chkpt, output_dir)

@@ -8,7 +8,7 @@ _target_: diffusion_policy.workspace.train_vq_bet_image_workspace.TrainVQBeTImag
 
 task_name: ${task.name}
 shape_meta: ${task.shape_meta}
-exp_name: "Latest-Final-VQ-BET-Square-PH-Run1-Seed0"
+exp_name: "RESNET50-Latest-Final-VQ-BET-Square-PH-Run1-Seed0"
 
 horizon: &horizon 2
 n_obs_steps: 1
@@ -59,7 +59,7 @@ policy:
 
       # Architecture / modeling.
       # Vision backbone.
-      vision_backbone: resnet18
+      vision_backbone: resnet50
       crop_shape: [76, 76]
       crop_is_random: True
       pretrained_backbone_weights: null

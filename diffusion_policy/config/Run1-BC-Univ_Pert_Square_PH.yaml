@@ -1,0 +1,123 @@
+defaults:
+  - _self_
+  - task: square_image
+
+name: train_robomimic_image
+
+_target_: diffusion_policy.workspace.train_robomimic_image_workspace.TrainRobomimicUniPertImageWorkspace
+
+#checkpoints:
+#    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/can_ph/vanilla_bc/train_0/checkpoints/epoch=0050-test_mean_score=0.750.ckpt'
+#    train1: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/can_ph/vanilla_bc/train_1/checkpoints/epoch=0050-test_mean_score=0.700.ckpt'
+#    train2: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/can_ph/vanilla_bc/train_2/checkpoints/epoch=0050-test_mean_score=0.950.ckpt'
+#checkpoint: ${checkpoints.train0}
+
+checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run1-BC-Square-PH-Seed0_2024.09.28/10.44.38_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.260.ckpt'
+
+
+
+epsilon: 0.0625
+epsilon_step: 0.01
+
+task_name: ${task.name}
+shape_meta: ${task.shape_meta}
+exp_name: "Targeted-Run1-BC-Univ-Pert-pretrainedTrain0-Myseed0"
+# view: "robot0_eye_in_hand_image"
+view: "both"
+
+clip_min: 0
+clip_max: 1
+horizon: &horizon 1
+n_obs_steps: 1
+n_action_steps: 1
+n_latency_steps: 0
+dataset_obs_steps: *horizon
+past_action_visible: False
+keypoint_visible_rate: 1.0
+targeted: True
+perturbations: [0.15, 0.15, 0, 0, 0, 0, 0]
+gamma: 1.0
+log: True
+save_video: False
+n_vis: 3
+switch: 15 # after how many epoch to switch from classification loss to mse loss
+
+
+policy:
+  _target_: diffusion_policy.policy.robomimic_image_policy.RobomimicImagePolicy
+  shape_meta: ${shape_meta}
+  algo_name: bc
+  obs_type: image
+  # oc.select resolver: key, default
+  task_name: ${oc.select:task.task_name,lift}
+  dataset_type: ${oc.select:task.dataset_type,ph}
+  crop_shape: [76,76]
+  use_resnet50: False
+
+dataloader:
+  batch_size: 256
+  num_workers: 10
+  shuffle: True
+  pin_memory: True
+  persistent_workers: False
+
+val_dataloader:
+  batch_size: 64
+  num_workers: 10
+  shuffle: False
+  pin_memory: True
+  persistent_workers: False
+
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1.0e-4
+  betas: [0.95, 0.999]
+  eps: 1.0e-8
+  weight_decay: 1.0e-6
+
+training:
+  device: "cuda:0"
+  seed: 0
+  debug: False
+  resume: True
+  # optimization
+  num_epochs: 100
+  # training loop control
+  # in epochs
+  rollout_every: 25
+  checkpoint_every: 25
+  val_every: 25
+  sample_every: 25
+  # steps per epoch
+  max_train_steps: null
+  max_val_steps: null
+  # misc
+  tqdm_interval_sec: 1.0
+
+
+logging:
+  project: Adv_diffusion_policy
+  resume: True
+  mode: online
+  name: ${exp_name}_${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
+  tags: ["${name}", "${task_name}", "${exp_name}"]
+  id: null
+  group: null
+
+hydra:
+  job:
+    override_dirname: ${name}
+  run:
+    dir: data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+  sweep:
+    dir: data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
+    subdir: ${hydra.job.num}
+
+
+
+
+
+
+
+

@@ -1,7 +1,9 @@
 _target_: 'diffusion_policy.env_runner.robomimic_image_runner.AdversarialRobomimicImageRunner'
 #checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run1-BC-Square-PH-Seed0_2024.09.28/10.44.38_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.260.ckpt'
 
-checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run3-BC-Square-PH-Seed1001_2024.09.28/11.57.42_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.200.ckpt'
+#checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run3-BC-Square-PH-Seed1001_2024.09.28/11.57.42_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.200.ckpt'
+
+checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run2-BC-Square-PH-Seed123_2024.09.28/10.42.15_train_robomimic_image_square/checkpoints/epoch=0300-test_mean_score=0.140.ckpt'
 
 task: 'square_ph'
 dataset_path: '/home/ak/Documents/diffusion_policy/data/robomimic/datasets/square/ph/image.hdf5'
@@ -15,7 +17,7 @@ attack: True
 attack_type: 'pgd'
 patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vanilla_bc/train_0/checkpoints/tar_pert_0.0625_epoch_50_mean_score_0.14285714285714285_both.pkl'
 
-targeted: True
+targeted: False
 epsilon: 0.0625
 eps_iter: 0.01
 perturbations: [0.15, 0.15, 0., 0., 0., 0., 0]

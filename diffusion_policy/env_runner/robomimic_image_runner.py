@@ -262,7 +262,7 @@ class RobomimicImageRunner(BaseImageRunner):
         self.abs_action = abs_action
         self.tqdm_interval_sec = tqdm_interval_sec
 
-    def run(self, policy: BaseImagePolicy, adversarial_patch=None, cfg=None):
+    def run(self, policy: BaseImagePolicy, save_pkl=False,adversarial_patch=None, cfg=None):
         device = policy.device
         dtype = policy.dtype
         env = self.env
@@ -318,6 +318,8 @@ class RobomimicImageRunner(BaseImageRunner):
                 views = []
             else:
                 views = [cfg.view]
+            # if save_pkl:
+            #     obs_ls=[]
             done = False
             while not done:
                 # create obs dict
@@ -415,7 +417,9 @@ class RobomimicImageRunner(BaseImageRunner):
                 if self.abs_action:
                     env_action = self.undo_transform_action(action)
 
+
                 obs, reward, done, info = env.step(env_action)
+                # obs_ls.append(obs)
                 done = np.all(done)
                 past_action = action
                 # update pbar
@@ -481,6 +485,8 @@ class RobomimicImageRunner(BaseImageRunner):
             name = prefix + 'mean_score'
             value = np.mean(value)
             log_data[name] = value
+        # save_pkl_dir='/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/'
+        # pickle.dump(obs_ls, save_pkl_dir.joinpath('square_obs.pkl').open('wb'))
 
         return log_data
 
