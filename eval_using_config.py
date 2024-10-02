@@ -1,5 +1,6 @@
 import sys
 
+
 sys.stdout = open(sys.stdout.fileno(), mode='w', buffering=1)
 sys.stderr = open(sys.stderr.fileno(), mode='w', buffering=1)
 
@@ -70,7 +71,9 @@ def init_wandb(checkpoint, cfg, attack, view):
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_pusht.yaml')
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='lstm_gmm_image_pusht.yaml')
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_pgd_adversarial_Square_PH.yaml')
-@hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH.yaml')
+# @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH.yaml')
+# @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH.yaml')
+@hydra.main(config_path='diffusion_policy/eval_configs', config_name='Transferability.yaml')
 def main(cfg):
     checkpoint = cfg.checkpoint
     task = cfg.task
@@ -87,6 +90,13 @@ def main(cfg):
     # the output directory should depend on the current directory and the checkpoint path and the attack type and epsilon
     output_dir = os.path.join(os.getcwd(),
                               f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}")
+    if cfg.attack_type=='patch':
+        output_dir = os.path.join(os.getcwd(),
+                                  f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}_patch_path{cfg.patch_path}")
+    else:
+        output_dir = os.path.join(os.getcwd(),
+                                  f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}")
+
     if os.path.exists(output_dir):
         raise ValueError(f"Output path {output_dir} already exists!")
 
@@ -142,7 +152,8 @@ def main(cfg):
         wandb_run = init_wandb(checkpoint, cfg, attack, view)
         print("Wandb run initialized", wandb_run)
         config_path = 'diffusion_policy/eval_configs'
-        config_name = 'diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH'
+        config_name="Transferability.yaml"
+        # config_name = 'diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH'
         # config_name = 'diffusion_policy_image_ph_pick_pgd_adversarial_Square_PH'
         # config_name = 'vanilla_bc_ph_pick_adversarial_patch'
         # config_name = 'ibc_image_ph_pick_adversarial'
@@ -181,8 +192,13 @@ def main(cfg):
         else:
             json_log[key] = value
     if cfg.log:
-        wandb.log({"test/mean_score": json_log["test/mean_score"], "train/mean_score": json_log["train/mean_score"], \
-                   "Epsilon": float(cfg.epsilon)})
+        if cfg.attack_type=="patch":
+            wandb.log({"test/mean_score": json_log["test/mean_score"], "train/mean_score": json_log["train/mean_score" ], \
+                   "Epsilon": float(cfg.epsilon),
+        "patch_path": str(cfg.patch_path)})
+        else :
+            wandb.log({"test/mean_score": json_log["test/mean_score"], "train/mean_score": json_log["train/mean_score"], \
+                       "Epsilon": float(cfg.epsilon)})
     print("Test/mean_score: ", json_log["test/mean_score"])
     out_path = os.path.join(output_dir, 'eval_log.json')
     json.dump(json_log, open(out_path, 'w'), indent=2, sort_keys=True)
