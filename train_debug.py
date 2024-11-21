@@ -1,3 +1,4 @@
+__author__ = "akansha_kalra"
 """
 Usage:
 Training:
@@ -17,24 +18,25 @@ from diffusion_policy.workspace.base_workspace import BaseWorkspace
 # allows arbitrary python code execution in configs using the ${eval:''} resolver
 OmegaConf.register_new_resolver("eval", eval, replace=True)
 
-@hydra.main(
-    version_base=None,
-    config_path=str(pathlib.Path(__file__).parent.joinpath(
-        'diffusion_policy','config')
-    )
-)
-# @hydra.main(
-#     version_base=None,
-# )
 # @hydra.main(
 #     version_base=None,
 #     config_path=str(pathlib.Path(__file__).parent.joinpath(
-#         'diffusion_policy','config')),
-#     config_name="Run3-VQBET-TH.yaml"
+#         'diffusion_policy','config')
+#     )
 # )
+# @hydra.main(
+#     version_base=None,
+# )
+@hydra.main(
+    version_base=None,
+    config_path=str(pathlib.Path(__file__).parent.joinpath(
+        'diffusion_policy','config')),
+    config_name="Run3-vqbet-Square_PH-seed1001-usedfordebuggingTH.yaml"
+)
 def main(cfg: OmegaConf):
     # resolve immediately so all the ${now:} resolvers
     # will use the same time.
+    print(cfg)
     OmegaConf.resolve(cfg)
     cls = hydra.utils.get_class(cfg._target_)
     print(f"Check config task{cfg.task} and cfg task name {cfg.task.task_name}")

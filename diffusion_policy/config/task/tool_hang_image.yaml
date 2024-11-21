@@ -1,5 +1,5 @@
 name: tool_hang_image
-
+image_shape: [3, 240, 240]
 shape_meta: &shape_meta
   # acceptable types: rgb, low_dim
   obs:
@@ -21,7 +21,7 @@ shape_meta: &shape_meta
 
 task_name: &task_name tool_hang
 dataset_type: &dataset_type ph
-dataset_path: &dataset_path data/robomimic/datasets/${task.task_name}/${task.dataset_type}/image.hdf5
+dataset_path: &dataset_path /home/ak/Documents/diffusion_policy/robomimic/datasets/tool_hang/ph/image.hdf5
 abs_action: &abs_action False
 
 env_runner:

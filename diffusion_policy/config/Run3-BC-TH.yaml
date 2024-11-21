@@ -1,14 +1,13 @@
 defaults:
   - _self_
-  # - task: lift_image
-  - task: square_image
+  - task: tool_hang_image
 
 name: train_robomimic_image
 _target_: diffusion_policy.workspace.train_robomimic_image_workspace.TrainRobomimicImageWorkspace
 
 task_name: ${task.task_name}
 shape_meta: ${task.shape_meta}
-exp_name: "PostICLR-Final-Run1-BC-Square-PH-Seed0-Resnet50"
+exp_name: "Testing-Locally-Run3-BC-TH-Seed1001"
 
 checkpoint:
   save_last_ckpt: true
@@ -61,20 +60,25 @@ policy:
 
 training:
   device: "cuda:0"
-  seed: 0
+  seed: 1001
   debug: False
   resume: True
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  num_epochs: 1000
+#  num_epochs: 1000
+  num_epochs: 5
   gradient_accumulate_every: 1
   # training loop control
   # in epochs
-  rollout_every: 50
-  checkpoint_every: 50
-  val_every: 50
-  sample_every: 50
+#  rollout_every: 50
+#  checkpoint_every: 50
+#  val_every: 50
+#  sample_every: 50
+  rollout_every: 1
+  checkpoint_every: 1
+  val_every: 1
+  sample_every: 1
   # steps per epo
   max_train_steps: null
   max_val_steps: null

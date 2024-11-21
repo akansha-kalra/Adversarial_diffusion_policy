@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="adv_robodiff" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="adv_robodiff" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="vq_adv_robodiff" project-jdk-type="Python SDK" />
 </project>

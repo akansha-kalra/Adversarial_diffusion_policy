@@ -121,7 +121,11 @@ class VQBeTPolicy(BaseImagePolicy):
             # for these the dict should contain camera views starting with observation.image
             nobs_dict = dict_apply(nobs_dict, lambda x: x.to(self.device))
             nobs_dict['observation.image_robot0'] = nobs_dict['robot0_eye_in_hand_image']
-            nobs_dict['observation.image_agentview'] = nobs_dict['agentview_image']
+            try:
+                nobs_dict['observation.image_agentview'] = nobs_dict['agentview_image']
+            except KeyError:
+                nobs_dict['observation.image_sideview'] = nobs_dict['sideview_image']
+
             state_keys = ['robot0_eef_pos', 'robot0_eef_quat', 'robot0_gripper_qpos']
             nobs_dict['observation.state'] = torch.cat([nobs_dict[key] for key in state_keys], dim=-1).squeeze(1)
             nobs_dict["observation.images"] = torch.stack([nobs_dict[k] for k in self.expected_image_keys],
@@ -172,7 +176,10 @@ class VQBeTPolicy(BaseImagePolicy):
             nobs = dict_apply(nobs, lambda x: x.requires_grad_(True))
         except KeyError:
             nobs['observation.image_robot0'] = nobs['robot0_eye_in_hand_image']
-            nobs['observation.image_agentview'] = nobs['agentview_image']
+            try:
+                nobs['observation.image_agentview'] = nobs['agentview_image']
+            except KeyError:
+                nobs['observation.image_sideview'] = nobs['sideview_image']
             # stack the state observations from nobs
             state_keys = ['robot0_eef_pos', 'robot0_eef_quat', 'robot0_gripper_qpos']
             nobs['observation.state'] = torch.cat([nobs[key] for key in state_keys], dim=-1)

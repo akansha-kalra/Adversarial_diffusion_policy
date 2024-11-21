@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/diffusion_policy" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/robomimic" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="adv_robodiff" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="vq_adv_robodiff" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

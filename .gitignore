@@ -2,6 +2,7 @@ bin
 logs
 wandb
 outputs
+pre_trained_checkpoints
 data
 data_local
 .vscode

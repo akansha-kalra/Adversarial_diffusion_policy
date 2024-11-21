@@ -53,7 +53,8 @@ def init_wandb(checkpoint, cfg, attack, view):
     #     return wandb.init(project=project, id=existing_run.id, resume='must')
     # else:
     #     # If no matching run exists, create a new one
-    return wandb.init(project=project, name=run_name)
+    run_name=run_name+str(cfg.patch_path)
+    return wandb.init(project=project, name=run_name+"task-transfer")
 
 
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_pgd_adversarial')
