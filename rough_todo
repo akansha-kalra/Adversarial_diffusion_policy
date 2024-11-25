@@ -84,3 +84,5 @@ HYDRA_FULL_ERROR=1 python eval_using_config.py --config-name=TRF_Random_Patch.ya
 
 
 HYDRA_FULL_ERROR=1 python3 train.py --config-name=Run1-untargeted-train_univ_pert_diffusion_unet_hybrid_workspace_Transport_PH-seed0.yaml  --config-dir=/home/ak/Documents/Adversarial_diffusion_policy/diffusion_policy/config/
+
+HYDRA_FULL_ERROR=1 python eval_using_config.py --config-name=Task_transfer.yaml

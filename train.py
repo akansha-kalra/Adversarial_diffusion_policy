@@ -32,6 +32,12 @@ OmegaConf.register_new_resolver("eval", eval, replace=True)
 #         'diffusion_policy','config')),
 #     config_name="Run3-VQBET-TH.yaml"
 # )
+# @hydra.main(
+#     version_base=None,
+#     config_path=str(pathlib.Path(__file__).parent.joinpath(
+#         'diffusion_policy','config')),
+#     config_name="Run1-Targeted_univ_pert_diffusion_unet_TH.yaml"
+# )
 def main(cfg: OmegaConf):
     # resolve immediately so all the ${now:} resolvers
     # will use the same time.

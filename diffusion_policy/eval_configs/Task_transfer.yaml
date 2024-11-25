@@ -8,12 +8,16 @@ checkpoints:
 #     lstm
 #     train0: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/lstm_gmm/train_0/checkpoints/epoch=1400-test_mean_score=0.864.ckpt'
      #vanilla bc
-     train0 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run1-BC-Square-PH-Seed0_2024.09.28/10.44.38_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.260.ckpt'
+#     train0 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run1-BC-Square-PH-Seed0_2024.09.28/10.44.38_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.260.ckpt'
+#    train1 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run2-BC-Square-PH-Seed123_2024.09.28/10.42.15_train_robomimic_image_square/checkpoints/epoch=0300-test_mean_score=0.140.ckpt'
+    train2 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run3-BC-Square-PH-Seed1001_2024.09.28/11.57.42_train_robomimic_image_square/checkpoints/epoch=0350-test_mean_score=0.200.ckpt'
      #vq-bet
 #     train0 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/Latest-Final-VQ-BET-Square-PH-Run1-Seed0_2024.09.26/16.06.15_train_vq_bet_image_square_image/checkpoints/epoch=0250-test_mean_score=0.560.ckpt'
+#     train1 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/Latest-FR--Final-VQ-BET-Square-PH-Run2-Seed123_2024.09.27/09.06.47_train_vq_bet_image_square_image/checkpoints/epoch=0150-test_mean_score=0.560.ckpt'
+#     train2 : '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/Latest-FR-Final-VQ-BET-Square-PH-Run3-Seed1001_2024.09.27/12.02.18_train_vq_bet_image_square_image/checkpoints/epoch=0200-test_mean_score=0.640.ckpt'
 
 
-checkpoint: ${checkpoints.train0}
+checkpoint: ${checkpoints.train2}
 task: 'square_image'
 dataset_path: '/home/ak/Documents/diffusion_policy/data/robomimic/datasets/square/ph/image.hdf5'
 #algo: 'Diffusion_Policy'
@@ -40,7 +44,7 @@ patch_paths:
 #patch_path: ${patch_paths.diffusion_policy}
 patch_path: ${patch_paths.vanilla_bc}
 #patch_path: ${patch_paths.ibc}
-#patch_path: ${patch_paths.rand}
+#patch_path: ${patch_paths.lstm_gmm}
 #patch_path: ${patch_paths.vqbet}
 # patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vanilla_bc/train_0/checkpoints/untar_pert_0.0625_epoch_15_mean_score_0.62_robot0_eye_in_hand_image.pkl'
 # patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_0/checkpoints/untar_pert_0.0625_epoch_5_mean_score_0.0_robot0_eye_in_hand_image.pkl'

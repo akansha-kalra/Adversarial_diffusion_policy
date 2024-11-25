@@ -26,7 +26,7 @@ dataset_path: &dataset_path /home/ak/Documents/diffusion_policy/robomimic/datase
 abs_action: &abs_action True
 
 env_runner:
-  _target_: diffusion_policy.env_runner.robomimic_image_runner.RobomimicImageRunner
+  _target_: diffusion_policy.env_runner.robomimic_image_runner.RobomimicImageRunner_TH
   dataset_path: *dataset_path
   shape_meta: *shape_meta
   # costs 1GB per env

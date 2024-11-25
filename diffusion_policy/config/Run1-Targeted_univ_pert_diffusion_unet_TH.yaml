@@ -3,7 +3,7 @@ defaults:
   - task: tool_hang_image_abs
 
 name: train_diffusion_unet_hybrid
-_target_: diffusion_policy.workspace.train_diffusion_unet_hybrid_workspace.TrainRobomimicUniPertImageWorkspaceDP
+_target_: diffusion_policy.workspace.train_diffusion_unet_hybrid_workspace.TrainRobomimicUniPertImageWorkspaceDP_TH
 
 
 checkpoint: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/tool_hang/diffusion_policy_cnn/train_0/checkpoints/epoch=2150-test_mean_score=0.955.ckpt'
@@ -14,7 +14,7 @@ epsilon: 0.125
 epsilon_step: 0.01
 task_name: ${task.name}
 shape_meta: ${task.shape_meta}
-exp_name: "Testing-Locally-Targeted-TH-Univ-Pert-DP-Run1-pretrainedTrain0-Myseed0"
+exp_name: "Finally-CFG-RETesting-Locally-Targeted-TH-Univ-Pert-DP-Run1-pretrainedTrain0-Myseed0"
 
 view: "both"
 # view: 'image'
@@ -26,10 +26,10 @@ targeted: True
 perturbations: [0.45 , 0.45, 0, 0, 0, 0, 0, 0, 0, 0]
 
 log: True
-save_video: False
+save_video: True
 n_vis: 4
 #changing this so it can gif correctly-wasted run
-#patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_0/checkpoints/epoch=1250-test_mean_score=1.000.ckpt'
+patch_path: 'data/outputs/${exp_name}_${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}'
 
 horizon: 16
 n_obs_steps: 2
@@ -42,7 +42,7 @@ obs_as_global_cond: True
 dataset_path: '/home/ak/Documents/diffusion_policy/robomimic/datasets/tool_hang/ph/image_abs.hdf5'
 
 policy:
-  _target_: diffusion_policy.policy.diffusion_unet_hybrid_image_policy.DiffusionUnetHybridImagePolicy
+  _target_: diffusion_policy.policy.diffusion_unet_hybrid_image_policy.DiffusionUnetHybridImagePolicy_TH
 
   shape_meta: ${shape_meta}
 
@@ -111,7 +111,7 @@ training:
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  num_epochs: 5
+  num_epochs: 1
   gradient_accumulate_every: 1
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
