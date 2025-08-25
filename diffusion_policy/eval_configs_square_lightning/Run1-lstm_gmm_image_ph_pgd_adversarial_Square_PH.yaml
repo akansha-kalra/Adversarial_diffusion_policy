@@ -1,0 +1,39 @@
+_target_: 'diffusion_policy.env_runner.robomimic_image_runner.AdversarialRobomimicImageRunnerLSTM'
+checkpoints: 
+    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/pre_trained_checkpoints/square/lstm_gmm/train_0/checkpoints/epoch=1400-test_mean_score=0.864.ckpt'
+
+checkpoint: ${checkpoints.train0}
+
+task: 'square_ph'
+dataset_path: '/teamspace/studios/this_studio/bc_attacks/robomimic/datasets/square/ph/image.hdf5'
+algo: 'lstm_gmm'
+n_envs: 26
+n_test: 50
+n_train: 2
+log: True
+device: 'cuda:0'
+attack: True
+attack_type: 'fgsm'
+targeted: False
+epsilon: 0.0625
+eps_iter: 0.01
+perturbations: [0.15, 0.15, 0., 0., 0., 0., 0]
+clip_min: 0
+clip_max: 1
+view: 'both'
+rand_int: False
+action_space: None
+rand_target: False
+n_iter: 40
+norm: 'linf'
+max_steps: 400
+patch_size: 16
+seed: 0
+save_video: False
+n_vis: 3
+# pgd:
+#  eta_bound:
+#  num_iter:
+#  norm:
+#  rand_int:
+

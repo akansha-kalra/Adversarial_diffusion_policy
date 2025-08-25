@@ -1,0 +1,42 @@
+_target_: 'diffusion_policy.env_runner.robomimic_single_image_runner.RobomimicSingleImageRunner'
+checkpoints: 
+    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_0/checkpoints/epoch=1100-test_mean_score=1.000.ckpt'
+    train1: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_1/checkpoints/epoch=0300-test_mean_score=1.000.ckpt'
+    train2: 'teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_2/checkpoints/epoch=0300-test_mean_score=1.000.ckpt'
+
+checkpoint: ${checkpoints.train0}
+task: 'lift_ph'
+dataset_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/lift/ph/image.hdf5'
+algo: 'lstm_gmm'
+device: 'cpu'
+attack: True
+attack_type: 'patch'
+seed: 1023
+# epsilons: [0.01, 0.03, 0.1, 0.3, 0.5]
+# epsilons: [0.015625, 0.03125, 0.0625, 0.125, 0.2, 0.3, 0.5, 1.0]
+epsilon: 0.2
+perturbations: [0.25]
+clip_min: 0
+clip_max: 1
+view: 'robot0_eye_in_hand_image'
+num_iter: 40
+targeted: True
+rand_int: True
+eps_iter: 0.02
+norm: 'linf'
+rand_target: False
+action_space: None
+n_train: 1
+n_test: 1
+
+patch_size: 16
+patch_type: 'square'
+patch_loc: 'top_left'
+image_size: 84
+
+
+# pgd:
+#  eta_bound:
+#  num_iter:
+#  norm:
+#  rand_int:

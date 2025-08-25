@@ -74,7 +74,8 @@ def init_wandb(checkpoint, cfg, attack, view):
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_pgd_adversarial_Square_PH.yaml')
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH.yaml')
 # @hydra.main(config_path='diffusion_policy/eval_configs', config_name='diffusion_policy_image_ph_pick_fgsm_adversarial_Square_PH.yaml')
-@hydra.main(config_path='diffusion_policy/eval_configs', config_name='Transferability.yaml')
+# @hydra.main(config_path='diffusion_policy/eval_configs', config_name='Transferability.yaml')
+@hydra.main(config_path='diffusion_policy/eval_configs_square_lightning', config_name='Run1-Targeted-diffusion_policy_image_ph_pgd_adversarial_Square_PH_0point1.yaml')
 def main(cfg):
     checkpoint = cfg.checkpoint
     task = cfg.task
@@ -89,14 +90,14 @@ def main(cfg):
     print(f"Running attack {attack} on {view} view")
 
     # the output directory should depend on the current directory and the checkpoint path and the attack type and epsilon
-    output_dir = os.path.join(os.getcwd(),
-                              f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}")
+    # output_dir = os.path.join(os.getcwd(),
+    #                           f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}")
     if cfg.attack_type=='patch':
         output_dir = os.path.join(os.getcwd(),
-                                  f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}_patch_path{cfg.patch_path}")
+                                  f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}_patch_path{cfg.patch_path}_ts_attack{cfg.attack_after_timetseps}")
     else:
         output_dir = os.path.join(os.getcwd(),
-                                  f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}")
+                                  f"data/experiments/image/{task}/{algo}/eval_{checkpoint.split('/')[-3]}_{epsilon}_{view}_attack_{attack}_{cfg.attack_type}_targeted_{cfg.targeted}_ts_attack{cfg.attack_after_timetseps}")
 
     if os.path.exists(output_dir):
         raise ValueError(f"Output path {output_dir} already exists!")

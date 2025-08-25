@@ -1,0 +1,68 @@
+# _target_: 'diffusion_policy.env_runner.robomimic_image_runner.AdversarialRobomimicImageRunnerDP'
+_target_: 'diffusion_policy.env_runner.robomimic_image_runner.RobomimicImageRunner'
+checkpoints:
+    #dp checkpoint
+    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_0/checkpoints/epoch=1250-test_mean_score=1.000.ckpt'
+checkpoint: ${checkpoints.train0}
+task: 'square_ph'
+dataset_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/square/ph/image_abs.hdf5'
+algo: 'Diffusion_Policy'
+n_envs: 26
+n_test: 50
+n_train: 2
+log: True
+device: 'cuda:0'
+attack: True
+
+attack_type: 'patch'
+patch_paths:
+    rand: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_0/checkpoints/epoch=1250-test_mean_score=1.000.ckpt'
+    diffusion_policy: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_0/checkpoints/untar_pert_0.125_epoch_40_mean_score_0.0_both_image.pkl'
+    vanilla_bc: '/home/ak/Documents/Adversarial_diffusion_policy/data/outputs/ALLFixed-Final-Run1-BC-Square-PH-Seed0_2024.09.28/10.44.38_train_robomimic_image_square/checkpoints/Run1-BC-Univ-Pert-pretrainedTrain0-Myseed0_untar_pert_0.0625_epoch_75_mean_score_0.0_both.pkl'
+    lstm_gmm: '/home/ak/Documents/Adversarial_diffusion_policy/pre_trained_checkpoints/square/lstm_gmm/train_0/checkpoints/Square-Univ-Pert-LSTM-GMM-Run1-ntest50-pretrainedTrain0-Myseed0_untar_pert_0.0625_epoch_25_mean_score_0.0_both_image.pkl'
+
+    ibc: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/pusht/ibc_dfo/train_0/checkpoints/untar_pert_0.0625_epoch_30_mean_score_0.6539760915766493_image.pkl'
+
+    vqbet: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/can_ph/pusht/train_0/checkpoints/untar_pert_0.0625_epoch_30_mean_score_0.08262392043831951_image.pkl'
+patch_path: ${patch_paths.rand}
+# patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/vanilla_bc/train_0/checkpoints/untar_pert_0.0625_epoch_15_mean_score_0.62_robot0_eye_in_hand_image.pkl'
+# patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/lstm_gmm/train_0/checkpoints/untar_pert_0.0625_epoch_5_mean_score_0.0_robot0_eye_in_hand_image.pkl'
+# patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/ibc_dfo/train_0/checkpoints/untar_pert_0.0625_epoch_10_mean_score_0.82_robot0_eye_in_hand_image.pkl'
+# patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/bet/train6/checkpoints/untar_pert_0.0625_epoch_25_mean_score_0.0_robot0_eye_in_hand_image_just_nobs_reg.pkl'
+# patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/random_patch.pkl'
+
+
+targeted: False
+# epsilons: [0.015625, 0.03125, 0.0625, 0.125]
+# epsilons: [0.01, 0.03, 0.1, 0.3, 0.5]
+# epsilons: [0.0078125, 0.01953125, 0.03125, 0.0625, 0.125]
+epsilons:
+    zero: 0.00
+    first: 0.015625
+    second: 0.03125
+    third: 0.0625
+    fourth: 0.125
+    fifth: 0.25
+
+epsilon: ${epsilons.fourth}
+clip_min: 0
+clip_max: 1
+
+view: 'both'
+rand_target: False
+action_space: None
+rand_int: False
+# perturbations: [100, 100]
+perturbations: [0.45, 0.45, 0, 0, 0, 0, 0, 0, 0, 0]
+eps_iter: 0.01
+num_iter: 4
+norm: 'linf'
+attack_after_timesteps: 0.9
+max_steps: 400
+save_video: False
+n_vis: 3
+# pgd:
+#  eta_bound:
+#  num_iter:
+#  norm:
+#  rand_int:

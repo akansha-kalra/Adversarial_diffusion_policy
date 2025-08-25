@@ -1,0 +1,41 @@
+_target_: 'diffusion_policy.env_runner.robomimic_image_runner.AdversarialRobomimicImageRunnerBET'
+checkpoints: 
+    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/bet/train0/checkpoints/epoch=0050-test_mean_score=0.944.ckpt'
+    train1: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/bet/train1/checkpoints/epoch=0050-test_mean_score=0.860.ckpt'
+    train2: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/bet/train2/checkpoints/epoch=0200-test_mean_score=0.833.ckpt'
+checkpoint: ${checkpoints.train0}
+task: 'lift_ph'
+dataset_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/lift/ph/image.hdf5'
+algo: 'BET'
+n_envs: 26
+n_test: 24
+n_train: 2
+log: False
+device: 'cuda:0'
+attack: False
+attack_type: 'pgd'
+epsilons:
+    epsilon0: 0.03125
+    epsilon1: 0.0625
+    epsilon2: 0.125
+epsilon: ${epsilons.epsilon1}
+eps_iter: 0.01
+# epsilons: [0.01, 0.03, 0.1, 0.3, 0.5]
+# epsilons: [0.0078125, 0.01953125, 0.03125, 0.0625, 0.125]
+# epsilons: [0.125, 0.2, 0.3]
+clip_min: 0
+clip_max: 1
+view: 'both'
+rand_target: False
+action_space: None
+rand_int: False
+perturbations: [0., 0.0, 0.25, 0, 0, 0, 0]
+num_iter: 40
+norm: 'linf'
+max_steps: 400
+targeted: True
+# pgd:
+#  eta_bound:
+#  num_iter:
+#  norm:
+#  rand_int:

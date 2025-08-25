@@ -1,0 +1,36 @@
+_target_: 'diffusion_policy.env_runner.robomimic_image_runner.AdversarialRobomimicImageRunnerIBC'
+
+checkpoints: 
+    train0: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/pre_trained_checkpoints/square/ibc_dfo/train_0/checkpoints/epoch=2950-test_mean_score=0.045.ckpt'
+
+checkpoint: ${checkpoints.train0}
+
+task: 'square_ph'
+dataset_path: '/teamspace/studios/this_studio/bc_attacks/robomimic/datasets/square/ph/image.hdf5'
+algo: 'ibc'
+n_envs: 26
+n_test: 50
+n_train: 2
+log: True
+max_steps: 400
+device: 'cuda:0'
+attack: True
+attack_type: 'fgsm'
+targeted: False
+patch_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/experiments/image/lift_ph/ibc_dfo/train_0/checkpoints/untar_pert_0.0625_epoch_30_mean_score_0.3333333333333333_robot0_eye_in_hand_image.pkl'
+epsilon: 0.0625
+eps_iter: 0.01
+perturbations: [0.15, 0.15, 0., 0., 0., 0., 0]
+clip_min: 0
+clip_max: 1
+view: 'both'
+rand_target: False
+action_space: None
+save_video: False
+n_vis: 3
+
+# pgd:
+#  eta_bound:
+#  num_iter:
+#  norm:
+#  rand_int:

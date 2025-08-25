@@ -1,0 +1,32 @@
+_target_: 'diffusion_policy.env_runner.robomimic_image_runner.AdversarialRobomimicImageRunnerDP'
+checkpoint: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/pre_trained_checkpoints/square/diffusion_policy_cnn/train_2/checkpoints/epoch=2600-test_mean_score=1.000.ckpt'
+task: 'square_ph'
+dataset_path: '/teamspace/studios/this_studio/bc_attacks/diffusion_policy/data/robomimic/datasets/square/ph/image_abs.hdf5'
+algo: 'Diffusion_Policy'
+n_envs: 26
+n_test: 50
+n_train: 2
+log: True
+device: 'cuda:2'
+attack: True
+attack_type: 'fgsm'
+targeted: False
+epsilons: [0.015625, 0.03125, 0.0625, 0.125]
+# epsilons: [0.01, 0.03, 0.1, 0.3, 0.5]
+# epsilons: [0.0078125, 0.01953125, 0.03125, 0.0625, 0.125]
+# epsilons: [0.125, 0.2, 0.3]
+epsilon: 0.125
+clip_min: -1
+clip_max: 1
+view: 'both'
+rand_target: False
+action_space: None
+rand_int: False
+perturbations: [0.45, 0.45, 0, 0, 0, 0, 0, 0, 0, 0]
+eps_iter: 0.01
+num_iter: 4
+norm: 'linf'
+attack_after_timesteps: 0.9
+max_steps: 400
+save_video: False
+n_vis: 3
